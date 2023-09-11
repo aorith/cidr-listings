@@ -1,0 +1,22 @@
+<tr hx-ext="response-targets">
+  <form id="{{ item['id'] }}">
+    <td><input id="{{ item['id'] }}-id" type="text" name="id" readonly value="{{ item['id'] }}" /></td>
+    <td>{{ item['networks'] }}</td>
+    <td>
+      <select id="{{ item['id'] }}-type" name="list_type">
+        <option value="DENY" {{ 'selected' if item['list_type']=='DENY' else '' }}>DENY</option>
+        <option value="SAFE" {{ 'selected' if item['list_type']=='SAFE' else '' }}>SAFE</option>
+      </select>
+    </td>
+    <td class="tcenter"><input id="{{ item['id'] }}-enabled" type="checkbox" name="enabled" {{ 'checked' if
+        item['enabled'] else '' }} /></td>
+    <td><input id="{{ item['id'] }}-tags" type="text" name="tags" value="{{ item['tags'] }}" /></td>
+    <td><input id="{{ item['id'] }}-desc" type="text" name="description" value="{{ item['description'] }}" /></td>
+    <td>
+      <img class="edit" src="static/img/save.svg" alt="Save" height="24" width="24"
+        hx-put="/parts/list/{{ item['id'] }}" hx-target="closest tr" hx-target-4*="#errors" hx-target-5*="#errors"
+        hx-swap="outerHTML"
+        hx-include="[id='{{ item['id'] }}-id'],[id='{{ item['id'] }}-type'],[id='{{ item['id'] }}-enabled'],[id='{{ item['id'] }}-tags'],[id='{{ item['id'] }}-desc']" />
+    </td>
+  </form>
+</tr>

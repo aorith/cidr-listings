@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html class="h-full">
+
+<head>
+  <title>CIDR Listings</title>
+  <meta charset="utf-8" />
+  <!--IE compatibility-->
+  <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
+  <link rel="stylesheet" href="static/vendored/css/normalize.css" />
+  <link rel="stylesheet" href="static/css/shared.css" />
+
+  <script src="static/vendored/js/htmx.min-1.9.5.js"></script>
+  <script src="static/vendored/js/htmx.response-targets-1.9.5.js"></script>
+</head>
+
+<body>
+  <header>
+    <div class="header-left">
+      <a href="/"><img id="logo" alt="CIDR Listings" src="/static/img/logo-only.png" width="48" height="48" /></a>
+      <b>CIDR Listings</b>
+    </div>
+
+    <div class="header-right" hx-get="/parts/list/" hx-trigger="load" hx-target="#appcontent">
+      <ul>
+        <li><a hx-get="/parts/list/" hx-swap="innerHTML transition:true" hx-target="#appcontent">Lists</a></li>
+        <li><a hx-get="/parts/cidr/" hx-swap="innerHTML transition:true" hx-target="#appcontent">CIDRs</a></li>
+        <li><a hx-get="/parts/cidr/ni" hx-swap="innerHTML transition:true" hx-target="#appcontent">Network Info</a></li>
+        <li><a href="/docs">Docs</a></li>
+      </ul>
+
+      <ul>
+        <li><b>👤 {{ login }}</b></li>
+        <li><a hx-get="/logout">Logout</a></li>
+      </ul>
+    </div>
+  </header>
+
+  <main>
+    <div id="appcontent">
+    </div>
+  </main>
+</body>
+
+<script>
+  document.body.addEventListener("cleanErrors", function (evt) {
+    const e = document.querySelector(".error");
+    if (e) {
+      e.remove();
+    }
+  })
+
+  document.body.addEventListener("scrollToBottom", function (evt) {
+    const app = document.querySelector("#appcontent");
+    window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
+  })
+</script>
+
+</html>

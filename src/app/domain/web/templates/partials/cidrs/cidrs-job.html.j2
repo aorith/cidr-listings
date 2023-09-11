@@ -1,0 +1,44 @@
+<hr>
+<h3>Job has been submitted!</h3>
+<table>
+  <thead>
+    <tr>
+      <th>Term</th>
+      <th>Value</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>Job ID</th>
+      <td>{{ job.job_id }}</td>
+    </tr>
+    <tr>
+      <th>List ID</th>
+      <td>{{ job.list_id }}</td>
+    </tr>
+    <tr>
+      <th>List Type</th>
+      <td>{{ job.list_type }}</td>
+    </tr>
+    <tr>
+      <th>List Enabled</th>
+      <td>{{ job.list_enabled }}</td>
+    </tr>
+    <tr>
+      <th>User ID</th>
+      <td>{{ job.user_id }}</td>
+    </tr>
+    <tr>
+      <th>Action</th>
+      <td>{{ job.action }}</td>
+    </tr>
+    <tr>
+      <th>TTL</th>
+      <td>{{ job.ttl }}</td>
+    </tr>
+    <tr>
+      <th>CIDRs</th>
+      <td>{% for c in job.cidrs %} {{ c }} {% endfor %}</td>
+    </tr>
+  </tbody>
+</table>

@@ -1,0 +1,17 @@
+<tr class="{{ 'new-item' if new_item else '' }}" hx-ext="response-targets">
+  <td><a hx-get="/parts/list/{{ item['id'] }}" hx-swap="innerHTML transition:true" hx-target="#appcontent">{{ item["id"]
+      }}</a></td>
+  <td>{{ item["networks"] if item["networks"] else "0" }}</td>
+  <td>{{ item["list_type"] }}</td>
+  <td class="tcenter"><span class="{{ 'green' if item['enabled'] else 'red' }}">{{ "✓" if item["enabled"] else "✗"
+      }}</span></td>
+  <td>{{ item["tags"] }}</td>
+  <td>{{ item["description"] }}</td>
+  <td>
+    <img class="edit" src="static/img/edit.svg" alt="Edit" height="24" width="24"
+      hx-get="/parts/list/edit/{{ item['id'] }}" hx-target="closest tr" hx-swap="outerHTML" />
+    <img class="delete" src="static/img/delete.svg" alt="Delete" height="24" width="24"
+      hx-delete="/parts/list/{{ item['id'] }}" hx-confirm="Delete {{ item['id'] }}?" hx-target="closest tr"
+      hx-swap="outerHTML swap:1s" />
+  </td>
+</tr>

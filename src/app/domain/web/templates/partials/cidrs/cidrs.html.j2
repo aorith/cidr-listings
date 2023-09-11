@@ -1,0 +1,24 @@
+<div id="cidrs" class="center">
+
+  <h3>Enter the addresses that you want to add/delete to/from a list.</h3>
+  <p>You can paste any string that contains addresses (a raw JSON for example) and it will be parsed in search for valid
+    IPv4 and IPv6 addresses.</p>
+
+  <form class="smallf" hx-ext="response-targets">
+    <div>
+      <textarea id="cidrs-raw" name="cidrs-raw" rows="10" cols="80"></textarea>
+    </div>
+    <div>
+      <button type="submit" hx-post="/parts/cidr/" hx-target="#cidrs-parsed" hx-target-4*="#errors">Parse</button>
+    </div>
+  </form>
+
+  {% if error %}
+  <div class="error">{{ error }}</div>
+  {% endif %}
+  <hr>
+
+  <div id="cidrs-parsed">
+  </div>
+
+</div>

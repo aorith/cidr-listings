@@ -1,0 +1,51 @@
+{% if ipv4_cidrs or ipv6_cidrs %}
+<h3>The following addresses have been found.</h3>
+
+<form class="blockf" hx-ext="response-targets">
+  <div>
+    <div>
+      <label for="ipv4-cidrs">IPv4 (total: {{ total_ipv4 }})</label>
+      <textarea id="ipv4-cidrs" name="ipv4-cidrs" rows="5" cols="35" readonly>{{ ipv4_cidrs }}</textarea>
+    </div>
+    <div>
+      <label for="ipv6-cidrs">IPv6 (total: {{ total_ipv6 }})</label>
+      <textarea id="ipv6-cidrs" name="ipv6-cidrs" rows="5" cols="35" readonly>{{ ipv6_cidrs }}</textarea>
+    </div>
+  </div>
+
+  <hr>
+  <h3>Select a list ID and the action to perform over those addresses.</h3>
+
+  <div>
+    <label for="list_id">List ID</label>
+    <select id="list_id" name="list_id">
+      {% for lst in lists %}
+      <option value="{{ lst }}">{{ lst }}</option>
+      {% endfor %}
+    </select>
+  </div>
+
+  <div>
+    <label for="ttl">TTL (in seconds)</label>
+    <input id="ttl" type="number" name="ttl" value="0" required />
+  </div>
+
+  <div>
+    <label for="action">Action</label>
+    <select id="action" name="action">
+      <option value="add" selected>Add</option>
+      <option value="delete">Delete</option>
+    </select>
+  </div>
+
+  <div>
+    <button type="submit" hx-put="/parts/cidr/" hx-target="#cidrs-result" hx-target-4*="#errors">Submit</button>
+  </div>
+</form>
+
+
+<div id="cidrs-result">
+</div>
+{% else %}
+<h3>No addresses found.</h3>
+{% endif %}

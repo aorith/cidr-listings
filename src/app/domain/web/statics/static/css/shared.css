@@ -1,0 +1,306 @@
+.error {
+  display: block;
+  color: black;
+  background-color: white;
+  font-family: monospace;
+  font-weight: bold;
+  padding: 12px;
+  border-radius: 12px;
+  border: 1px solid yellow;
+  box-shadow: 0 0 6px 2px rgba(200, 0, 0, 0.4);
+}
+
+@keyframes backgroundAnimation {
+  0% {
+    background-color: inherit;
+  }
+  50% {
+    background-color: #ffcc40;
+  }
+  100% {
+    background-color: inherit;
+  }
+}
+
+.new-item {
+  animation-duration: 0.4s;
+  animation-timing-function: linear;
+  animation-delay: 0s;
+  animation-iteration-count: 7;
+  animation-name: backgroundAnimation;
+}
+
+tr.htmx-swapping td {
+  opacity: 0;
+  transition: opacity 1s ease-out;
+}
+
+.htmx-added {
+  opacity: 0.1;
+  transition: opacity 0.5s ease-in;
+}
+
+.htmx-request {
+  opacity: 0.5;
+  transition: opacity 300ms linear;
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+}
+
+@keyframes fade-out {
+  to {
+    opacity: 0;
+  }
+}
+
+@keyframes slide-from-right {
+  from {
+    transform: translateX(90px);
+  }
+}
+
+@keyframes slide-to-left {
+  to {
+    transform: translateX(-90px);
+  }
+}
+
+.slide-it {
+  view-transition-name: slide-it;
+}
+
+::view-transition-old(slide-it) {
+  animation:
+    180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
+}
+::view-transition-new(slide-it) {
+  animation:
+    420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+    600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
+}
+
+body {
+  font-family: sans-serif;
+  box-sizing: border-box;
+}
+
+header {
+  display: flex;
+  background-color: #fafafa;
+  padding: 12px 2px 0 2px;
+  margin: 0 0 14px 0;
+  box-shadow:
+    0 0 5px 0 rgba(0, 0, 0, 0.3),
+    0 2px 2px 0 rgba(0, 0, 0, 0.4);
+}
+
+.header-left {
+  display: block;
+  padding: 0 0 0 12px;
+  align-items: left;
+  text-align: left;
+  justify-content: left;
+  width: 30%;
+  height: 100%;
+}
+
+.header-right {
+  display: block;
+  align-items: center;
+  text-align: center;
+  justify-content: center;
+  width: 70%;
+  height: 100%;
+}
+
+.center {
+  margin: auto;
+  width: 60%;
+  min-width: 860px;
+  padding: 10px;
+}
+
+span.red {
+  color: red;
+  font-size: 1.2rem;
+}
+
+span.green {
+  color: green;
+  font-size: 1.2rem;
+}
+
+.tcenter {
+  text-align: center;
+}
+
+img.add,
+img.edit,
+img.delete {
+  cursor: pointer;
+  width: 24px;
+  height: 24px;
+}
+
+header ul {
+  display: inline-flex;
+  list-style: none;
+}
+
+header li {
+  margin: 0 16px 6px 0;
+}
+
+header ul a {
+  text-decoration: none;
+  box-sizing: border-box;
+  cursor: pointer;
+  font-weight: bold;
+  text-align: center;
+}
+
+header ul a:hover,
+header ul a:active {
+  color: #ff4742;
+}
+
+a {
+  color: #ab0a00;
+  cursor: pointer;
+  text-decoration: none;
+}
+a:hover {
+  color: #d91307;
+  text-decoration: underline;
+}
+header a {
+  font-weight: bold;
+}
+
+main {
+  margin: auto;
+  width: 90%;
+  padding: 5px;
+}
+
+table input {
+  font-family: monospace;
+  border: 0.1rem outset #f1f1f1;
+  width: 80%;
+  padding: 8px;
+}
+
+table {
+  margin: auto;
+  width: 100%;
+  text-align: left;
+  border-collapse: collapse;
+  border: 1px solid #c1c1c1;
+  background-color: #fafafa;
+  box-shadow:
+    0 0 3px 0 rgba(0, 0, 0, 0.2),
+    0 2px 2px 0 rgba(0, 0, 0, 0.24);
+}
+
+th,
+td {
+  padding: 8px;
+}
+
+thead th,
+tfoot th,
+tfoot td {
+  border: 1px solid #c1c1c1;
+}
+
+tbody tr:nth-child(odd) {
+  background-color: #fafafa;
+}
+
+tbody tr:nth-child(even) {
+  background-color: #f1f1f1;
+}
+
+caption {
+  font-size: 1.5rem;
+  padding: 20px;
+  font-weight: bold;
+  font-style: italic;
+  color: #121212;
+  text-align: left;
+  letter-spacing: 1px;
+}
+
+#appcontent form {
+  margin-top: 12px;
+}
+
+#appcontent form label {
+  padding: 14px;
+  font-weight: bold;
+}
+
+#appcontent form.smallf label,
+#appcontent form.smallf input,
+#appcontent form.smallf button,
+#appcontent form.smallf {
+  display: inline;
+}
+
+#appcontent form.blockf label,
+#appcontent form.blockf input,
+#appcontent form.blockf button,
+#appcontent form.blockf {
+  display: block;
+}
+
+#appcontent form input {
+  width: 40%;
+  padding: 8px;
+  margin: 0 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+#appcontent form textarea,
+#appcontent form select {
+  width: 40%;
+  padding: 8px;
+  margin: 0 0 8px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+textarea[readonly] {
+  background-color: #cfcfcf;
+}
+
+#appcontent form button {
+  width: 20%;
+  padding: 8px;
+  margin: 8px 0 0 8px;
+  background-color: #ab0a00;
+  color: white;
+  font-weight: bold;
+  border: none;
+  border-radius: 4px;
+  cursor: pointer;
+  transition-duration: 0.5s;
+}
+
+#appcontent form button:hover {
+  background-color: #d91307;
+  color: white;
+}
+
+@media (max-width: 1080px) {
+  main {
+    margin: 5px !important;
+    padding: 2px !important;
+  }
+}

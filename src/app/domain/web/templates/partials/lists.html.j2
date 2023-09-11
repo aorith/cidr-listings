@@ -1,0 +1,56 @@
+<div class="center">
+  <div id="errors">
+  </div>
+</div>
+
+<table>
+  <thead>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Networks</th>
+      <th scope="col">Type</th>
+      <th scope="col">Enabled</th>
+      <th scope="col">Tags</th>
+      <th scope="col">Description</th>
+      <th scope="col">Action</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr id="new-item-tr" hx-ext="response-targets">
+      <form>
+        <td><input type="text" placeholder="NEW_LIST_ID" name="id" required /></td>
+        <td>-</td>
+        <td>
+          <select name="list_type">
+            <option value="DENY">DENY</option>
+            <option value="SAFE">SAFE</option>
+          </select>
+        </td>
+        <td class="tcenter"><input type="checkbox" name="enabled" checked /></td>
+        <td><input type="text" placeholder="TAG1, TAG2, ..." name="tags" /></td>
+        <td><input type="text" placeholder="Description" name="description" /></td>
+        <td>
+          <img class="add" src="static/img/add.svg" alt="Add" height="24" width="24" hx-post="/parts/list"
+            hx-target="#new-item-tr" hx-target-4*="#errors" hx-target-5*="#errors" hx-swap="afterend"
+            hx-include="[name='id'],[name='list_type'],[name='enabled'],[name='tags'],[name='description']" />
+        </td>
+      </form>
+    </tr>
+
+    {% for item in items %}
+    {% include "partials/list-item.html.j2" %}
+    {% endfor %}
+
+  </tbody>
+  <tfoot>
+    <tr>
+      <th scope="col">ID</th>
+      <th scope="col">Networks</th>
+      <th scope="col">Type</th>
+      <th scope="col">Enabled</th>
+      <th scope="col">Tags</th>
+      <th scope="col">Description</th>
+      <th scope="col">Action</th>
+    </tr>
+  </tfoot>
+</table>

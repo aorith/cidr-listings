@@ -1,0 +1,15 @@
+{% for item in items %}
+<tr {% if last_cidr_id==item['id'] %} hx-get="/parts/list/{{ item['list_id'] }}/?last_cidr_id={{ last_cidr_id }}"
+  hx-trigger="revealed" hx-swap="afterend" {% endif %}>
+  <td><a hx-get="/parts/cidr/ni/{{ item['address'] }}" hx-swap="innerHTML transition:true" hx-target="#appcontent">{{
+      item["address"] }}</a></td>
+  <td>{{ item["expires_at"] }}</td>
+  <td>{{ item["created_at"] }}</td>
+  <td>{{ item["updated_at"] }}</td>
+  <td>
+    <img class="delete" src="static/img/delete.svg" alt="Delete" height="24" width="24"
+      hx-delete="/parts/cidr/{{ list_id }}/{{ item['address'] }}" hx-confirm="Delete {{ item['address'] }}?"
+      hx-target="closest tr" hx-swap="outerHTML swap:1s" />
+  </td>
+</tr>
+{% endfor %}
