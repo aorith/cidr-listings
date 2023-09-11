@@ -6,7 +6,7 @@ set -eu -o pipefail
   echo "Please copy 'env-example' as 'env' and modify it."
   exit 1
 }
-source env
+source "$PWD/env"
 
 timeout 60 docker network create cidrs 2>/dev/null || true
 
