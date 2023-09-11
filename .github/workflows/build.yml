@@ -46,9 +46,9 @@ jobs:
         id: build_image
         uses: redhat-actions/buildah-build@v2
         with:
-          context: ${{ matrix.image_name }}
+          context: .
           containerfiles: |
-            ${{ matrix.image_name }}/Containerfile
+            ./Dockerfile
           image: ${{ matrix.image_name }}
           tags: |
             ${{ steps.generate-tags.outputs.alias_tags }}
