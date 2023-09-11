@@ -2,6 +2,7 @@ TODO.md
 poetry.lock
 internal-tests
 env
+data
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
