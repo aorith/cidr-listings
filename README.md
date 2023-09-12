@@ -91,7 +91,13 @@ After you exclude address `a` with address `b` (checking if `b` is contained in 
 - One or many subnets if `b` is a subnet of `a`)
 - The original address `a` if `b` just doesn't exclude anything from `a`
 
-When you end up with one or multiple extra subnets after an exclusion, you need to iterate over them again to ensure that they are fully excluded with your "safe addresses". That can become very slow since you cannot be sure on how many times you need to iterate until everything is excluded correctly.  
+When you end up with one or multiple extra subnets after an exclusion, you need to iterate over them again to ensure that they are fully excluded with your "safe addresses". That can become tedious and very slow, you also cannot be sure on how many times you need to iterate until everything is excluded correctly.  
+
+That's what I solved, at least for this usercase with the following functions that exclude addresses correctly and faster:  
+
+- This is were the background job that filters addresses starts - [filter_safe_cidrs](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/worker.py#L130-L136)
+- This takes an address and filters it using many addresses - [address_exclude_many](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/iputils.py#L86)
+- This is a faster implementation of python's `ipaddress/address_exclude` and is called by `address_exclude_many` - [exclude_address_raw](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/iputils.py#L12)
 
 ### Installation & development
 
@@ -99,11 +105,6 @@ The scripts [run-postgres-prod.sh](run-postgres-prod.sh) and [run-app-prod.sh](r
 
 To develop locally, run `make install` to create a *venv* with all the dependencies, `make test` always starts an empty database and runs all the tests.  
 The app can be started by running the `litestar` cli tool: `cd src; litestar run --reload`.  
-That's what I solved for my usecase with the following functions:
-
-- This is were the background job that filters addresses starts - [filter_safe_cidrs](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/worker.py#L130-L136)
-- This takes an address and filters it using many addresses - [address_exclude_many](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/iputils.py#L86)
-- This is a faster implementation of python's `ipaddress/address_exclude` and is called by `address_exclude_many` - [exclude_address_raw](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/iputils.py#L12)
 
 ### Usage
 
