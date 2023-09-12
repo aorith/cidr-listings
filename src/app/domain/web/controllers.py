@@ -311,7 +311,7 @@ class WebPartCidrController(Controller):
         total_ipv4 = len(ipv4_valid)
         total_ipv6 = len(ipv6_valid)
 
-        lists = [x["id"] for x in await conn.fetch("select id from list where user_id = $1", request.user.id)]
+        lists = await conn.fetch("select id, list_type from list where user_id = $1", request.user.id)
 
         return Template(
             template_name="partials/cidrs/cidrs-parsed.html.j2",

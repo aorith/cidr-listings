@@ -20,7 +20,7 @@
     <label for="list_id">List ID</label>
     <select id="list_id" name="list_id">
       {% for lst in lists %}
-      <option value="{{ lst }}">{{ lst }}</option>
+      <option value="{{ lst['id'] }}">{{ lst['id'] }} ({{ lst['list_type'] }})</option>
       {% endfor %}
     </select>
   </div>
