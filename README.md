@@ -81,7 +81,7 @@ for i in a.address_exclude(b):
 1.1.0.0/24
 ```
 
-That is when you have to exclude one-from-one, when you have a thousands of addresses (safe addresses) that should exclude recursively another set of thousands of addresses (deny addresses) things start to complicate.  
+That is when you have to exclude one-from-one but when you have thousands of addresses (safe addresses) that should exclude recursively another set of thousands of addresses (deny addresses) things start to complicate.  
 After you exclude address `a` with address `b` (checking if `b` is contained in `a` of course) you might end up with:
 
 - Nothing, if `b` is a supernet of `a` (you cannot use `address_exclude` directly here and must check explicitly if `b` is a supernet of `a`)
