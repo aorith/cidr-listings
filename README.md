@@ -12,9 +12,9 @@ I created this app because I wanted to learn and experiment with:
 - [Msgspec](https://github.com/jcrist/msgspec) instead of [pydantic](https://github.com/pydantic/pydantic)
 - [JWT](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/domain/auth/jwt.py) [(Json Web Token)](.org/wiki/JSON_Web_Token)
 - [HTMX](https://htmx.org/)
-- Some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`.
+- Manipulating IP networks (here's some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`)
 
-There is an online instance (for testing) running online, but no open accounts are available, however [API docs](https://cidr.iou.re/docs) are open.  
+There is a test instance running online, but no accounts are available, however [API docs](https://cidr.iou.re/docs) are open.  
 
 This app allows you to create lists of IP addresses in their [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).  
 Lists have two types:  
