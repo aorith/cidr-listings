@@ -1,98 +1,110 @@
 <div id="network-info" class="center">
-
-  <p>Calculate network info for an address.</p>
-  <p>List field shows lists that contain that address or a supernet of it.</p>
-
-  <form class="smallf" hx-ext="response-targets">
-    <div>
-      <label for="address">Address</label>
-      <input id="address" type="text" placeholder="10.100.200.42/32" name="address"
-        value="{{ ip.exploded if ip else '' }}" required />
-      <button type="submit" hx-post="/parts/cidr/ni" hx-swap="innerHTML transition:true" hx-target="#network-info"
-        hx-target-4*="#errors">Search</button>
-    </div>
-  </form>
-
-  {% if error %}
-  <div class="error">{{ error }}</div>
-  {% endif %}
-  <hr>
-
-  {% if ip %}
-  <table>
-    <caption>{{ ip.compressed }}</caption>
-    <thead>
-      <tr>
-        <th>Name</th>
-        <th>Value</th>
-      </tr>
-    </thead>
-    <tbody>
-      <tr>
-        <td>Exploded</td>
-        <td>{{ ip.exploded }}</td>
-      </tr>
-      <tr>
-        <td>Integer range</td>
-        <td>{{ ip.network_address._ip }}, {{ ip.broadcast_address._ip }}</td>
-      </tr>
-      <tr>
-        <td>Version</td>
-        <td>{{ ip.version }}</td>
-      </tr>
-      <tr>
-        <td>Global address</td>
-        <td>{{ ip.is_global }}</td>
-      </tr>
-      <tr>
-        <td>Netmask</td>
-        <td>{{ ip.netmask }}</td>
-      </tr>
-      <tr>
-        <td>Total addresses</td>
-        <td>{{ ip.num_addresses }}</td>
-      </tr>
-      <tr>
-        <td>Network address</td>
-        <td>{{ ip.network_address }}</td>
-      </tr>
-      <tr>
-        <td>Broadcast address</td>
-        <td>{{ ip.broadcast_address }}</td>
-      </tr>
-      <tr>
-        <td>Usable addresses</td>
-        <td>{{ usable }}</td>
-      </tr>
-      <tr>
-        <td>Supernet</td>
-        <td>
-          <a hx-get="/parts/cidr/ni/{{ supernet.compressed }}" hx-swap="innerHTML transition:true"
-            hx-target="#appcontent">{{
-            supernet.compressed
-            }}</a><br />
-        </td>
-      </tr>
-      <tr>
-        <td>Subnets</td>
-        <td>
-          {% for subnet in subnets %}
-          <a hx-get="/parts/cidr/ni/{{ subnet.compressed }}" hx-swap="innerHTML transition:true"
-            hx-target="#appcontent">{{
-            subnet.compressed }}</a><br />
-          {% endfor %}
-        </td>
-      </tr>
-      <tr>
-        <td>Found on lists</td>
-        <td>
-          {% for lst in lists %}
-          <a hx-get="/parts/list/{{ lst }}" hx-swap="innerHTML transition:true" hx-target="#appcontent">{{ lst
-            }}</a><br />
-          {% endfor %}
-        </td>
-      </tr>
-    </tbody>
-  </table>
-  {% endif %}
+    <p>Calculate network info for an address.</p>
+    <p>List field shows lists that contain that address or a supernet of it.</p>
+    <form class="smallf" hx-ext="response-targets">
+        <div>
+            <label for="address">Address</label>
+            <input id="address"
+                   type="text"
+                   placeholder="10.100.200.42/32"
+                   name="address"
+                   value="{{ ip.exploded if ip else '' }}"
+                   required />
+            <button type="submit"
+                    hx-post="/parts/cidr/ni"
+                    hx-swap="innerHTML transition:true"
+                    hx-target="#network-info"
+                    hx-target-400="#errors"
+                    hx-target-401="#errors"
+                    hx-target-403="#errors"
+                    hx-target-500="#errors"
+                    hx-target-503="#errors">Search</button>
+        </div>
+    </form>
+    {% if error %}<div class="error">{{ error }}</div>{% endif %}
+    <hr>
+    {% if ip %}
+        <table>
+            <caption>{{ ip.compressed }}</caption>
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Value</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td>Exploded</td>
+                    <td>{{ ip.exploded }}</td>
+                </tr>
+                <tr>
+                    <td>Integer range</td>
+                    <td>{{ ip.network_address._ip }}, {{ ip.broadcast_address._ip }}</td>
+                </tr>
+                <tr>
+                    <td>Version</td>
+                    <td>{{ ip.version }}</td>
+                </tr>
+                <tr>
+                    <td>Global address</td>
+                    <td>{{ ip.is_global }}</td>
+                </tr>
+                <tr>
+                    <td>Netmask</td>
+                    <td>{{ ip.netmask }}</td>
+                </tr>
+                <tr>
+                    <td>Total addresses</td>
+                    <td>{{ ip.num_addresses }}</td>
+                </tr>
+                <tr>
+                    <td>Network address</td>
+                    <td>{{ ip.network_address }}</td>
+                </tr>
+                <tr>
+                    <td>Broadcast address</td>
+                    <td>{{ ip.broadcast_address }}</td>
+                </tr>
+                <tr>
+                    <td>Usable addresses</td>
+                    <td>{{ usable }}</td>
+                </tr>
+                <tr>
+                    <td>Supernet</td>
+                    <td>
+                        <a hx-get="/parts/cidr/ni/{{ supernet.compressed }}"
+                           hx-swap="innerHTML transition:true"
+                           hx-target="#appcontent">{{
+                            supernet.compressed
+                        }}</a>
+                        <br />
+                    </td>
+                </tr>
+                <tr>
+                    <td>Subnets</td>
+                    <td>
+                        {% for subnet in subnets %}
+                            <a hx-get="/parts/cidr/ni/{{ subnet.compressed }}"
+                               hx-swap="innerHTML transition:true"
+                               hx-target="#appcontent">{{
+                            subnet.compressed }}</a>
+                            <br />
+                        {% endfor %}
+                    </td>
+                </tr>
+                <tr>
+                    <td>Found on lists</td>
+                    <td>
+                        {% for lst in lists %}
+                            <a hx-get="/parts/list/{{ lst }}"
+                               hx-swap="innerHTML transition:true"
+                               hx-target="#appcontent">{{ lst
+                            }}</a>
+                            <br />
+                        {% endfor %}
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    {% endif %}
 </div>
