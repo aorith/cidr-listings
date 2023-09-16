@@ -1,5 +1,12 @@
 import msgspec
 from asyncpg.pool import PoolConnectionProxy
+from litestar import Request, Response
+from litestar.controller import Controller
+from litestar.datastructures import State
+from litestar.dto import DTOData
+from litestar.exceptions import HTTPException, NotFoundException
+from litestar.handlers import delete, get, post, put
+from litestar.status_codes import HTTP_400_BAD_REQUEST
 
 from app.domain.auth.schemas import Token, User
 from app.domain.cidr.schemas import CidrNL
@@ -14,13 +21,6 @@ from app.domain.lists.schemas import (
     ListUpdateDTO,
 )
 from app.lib.validations import run_validation
-from litestar import Request, Response
-from litestar.controller import Controller
-from litestar.datastructures import State
-from litestar.dto import DTOData
-from litestar.exceptions import HTTPException, NotFoundException
-from litestar.handlers import delete, get, post, put
-from litestar.status_codes import HTTP_400_BAD_REQUEST
 
 INSERT_LIST = """
 INSERT INTO list

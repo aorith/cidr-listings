@@ -1,4 +1,3 @@
-from app.lib.settings import get_settings
 from litestar import MediaType, Request, Response
 from litestar.datastructures import Cookie
 from litestar.response import Redirect
@@ -8,6 +7,8 @@ from litestar.status_codes import (
     HTTP_401_UNAUTHORIZED,
     HTTP_500_INTERNAL_SERVER_ERROR,
 )
+
+from app.lib.settings import get_settings
 
 settings = get_settings()
 

@@ -5,15 +5,7 @@ from typing import Annotated
 from uuid import UUID
 
 import msgspec
-from app.domain.auth.schemas import Token, User, UserLoginOrCreate
-from app.domain.auth.services import generate_token
-from app.domain.cidr.services import get_cidr_records_paginated
-from app.domain.lists.controllers import INSERT_JOB, INSERT_LIST, UPDATE_LIST, json_enc
-from app.domain.lists.schemas import ActionEnum, CidrJob, ListFull
-from app.lib.settings import get_settings
 from asyncpg.pool import PoolConnectionProxy
-from msgspec import ValidationError
-
 from litestar import Request, Response, delete, get, post, put
 from litestar.controller import Controller
 from litestar.datastructures import Cookie, State
@@ -22,6 +14,14 @@ from litestar.exceptions import HTTPException, NotFoundException, ValidationExce
 from litestar.params import Body
 from litestar.response import Template
 from litestar.status_codes import HTTP_200_OK, HTTP_204_NO_CONTENT
+from msgspec import ValidationError
+
+from app.domain.auth.schemas import Token, User, UserLoginOrCreate
+from app.domain.auth.services import generate_token
+from app.domain.cidr.services import get_cidr_records_paginated
+from app.domain.lists.controllers import INSERT_JOB, INSERT_LIST, UPDATE_LIST, json_enc
+from app.domain.lists.schemas import ActionEnum, CidrJob, ListFull
+from app.lib.settings import get_settings
 
 settings = get_settings()
 

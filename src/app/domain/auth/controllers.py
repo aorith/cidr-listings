@@ -1,4 +1,14 @@
 from asyncpg.pool import PoolConnectionProxy
+from litestar import Request, Response, post, put
+from litestar.controller import Controller
+from litestar.datastructures import ResponseHeader, State
+from litestar.exceptions import (
+    HTTPException,
+    InternalServerException,
+    NotAuthorizedException,
+    ValidationException,
+)
+from litestar.status_codes import HTTP_200_OK
 
 from app.domain.auth.schemas import (
     Token,
@@ -12,16 +22,6 @@ from app.domain.auth.schemas import (
 from app.domain.auth.services import generate_token
 from app.lib.authcrypt import generate_salt_and_hashed_password
 from app.lib.settings import get_settings
-from litestar import Request, Response, post, put
-from litestar.controller import Controller
-from litestar.datastructures import ResponseHeader, State
-from litestar.exceptions import (
-    HTTPException,
-    InternalServerException,
-    NotAuthorizedException,
-    ValidationException,
-)
-from litestar.status_codes import HTTP_200_OK
 
 settings = get_settings()
 

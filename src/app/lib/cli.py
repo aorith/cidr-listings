@@ -2,11 +2,11 @@ import asyncio
 
 import click
 from click import Group
+from litestar import Litestar
+from litestar.plugins import CLIPluginProtocol
 
 from app.domain.auth.services import create_user as create_user_service
 from app.lib.db.migrations import run_migrations_from_cli
-from litestar import Litestar
-from litestar.plugins import CLIPluginProtocol
 
 
 def _run_task(coro) -> None:

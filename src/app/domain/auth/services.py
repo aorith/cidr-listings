@@ -1,10 +1,10 @@
 from asyncpg.pool import PoolConnectionProxy
+from litestar.exceptions import NotAuthorizedException
 
 from app.domain.auth.jwt import encode_jwt_token
 from app.domain.auth.schemas import TokenResponse, User, UserLoginOrCreate, UserRoleEnum
 from app.lib.authcrypt import generate_salt_and_hashed_password, verify_password
 from app.lib.db.base import get_connection
-from litestar.exceptions import NotAuthorizedException
 
 INSERT_USER = """
 INSERT INTO user_login

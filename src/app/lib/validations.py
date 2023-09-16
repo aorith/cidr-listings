@@ -1,9 +1,8 @@
 from typing import Any
 
 import msgspec
-from msgspec import ValidationError
-
 from litestar.exceptions import ValidationException
+from msgspec import ValidationError
 
 
 async def run_validation(data: Any, target_type: Any):

@@ -56,6 +56,7 @@ exclude = '''
 '''
 
 [tool.ruff]
+src = ["src"]
 # https://beta.ruff.rs/docs/configuration/#using-pyprojecttoml
 target-version = "py310"
 line-length = 120
@@ -108,6 +109,3 @@ ignore = [
     "D",
     "T201", # use of print
 ]
-
-[tool.ruff.isort]
-known-first-party = ["litestar"]

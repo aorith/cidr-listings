@@ -3,11 +3,11 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Annotated
 
+from litestar.dto import DTOConfig, MsgspecDTO
 from msgspec import Meta, Struct, field
 
 from app.domain.cidr.schemas import CidrNL
 from app.lib.default_factories import datetime_no_microseconds
-from litestar.dto import DTOConfig, MsgspecDTO
 
 MAX_LIST_ID_LEN = 64
 MAX_TAG_LEN = 16

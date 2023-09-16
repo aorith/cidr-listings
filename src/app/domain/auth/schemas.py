@@ -3,10 +3,10 @@ from datetime import datetime
 from enum import StrEnum
 from typing import Annotated
 
+from litestar.dto import DTOConfig, MsgspecDTO
 from msgspec import Meta, Struct, field
 
 from app.lib.default_factories import datetime_no_microseconds
-from litestar.dto import DTOConfig, MsgspecDTO
 
 MIN_PLAIN_PASSWORD_LENGTH = 10
 MAX_PLAIN_PASSWORD_LENGTH = 64

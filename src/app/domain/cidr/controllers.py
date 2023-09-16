@@ -2,6 +2,12 @@ from ipaddress import collapse_addresses, ip_network
 from itertools import chain
 
 from asyncpg.pool import PoolConnectionProxy
+from litestar import Request, Response
+from litestar.controller import Controller
+from litestar.datastructures import State
+from litestar.handlers import get
+from litestar.params import Parameter
+from litestar.status_codes import HTTP_200_OK
 
 from app.domain.auth.schemas import Token, User
 from app.domain.cidr.schemas import Cidr, CidrByVersion
@@ -12,12 +18,6 @@ from app.domain.lists.schemas import (
     TAG_PARAMS_PATTERN,
     ListTypeEnum,
 )
-from litestar import Request, Response
-from litestar.controller import Controller
-from litestar.datastructures import State
-from litestar.handlers import get
-from litestar.params import Parameter
-from litestar.status_codes import HTTP_200_OK
 
 
 class CidrController(Controller):

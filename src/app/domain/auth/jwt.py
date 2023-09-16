@@ -2,11 +2,11 @@ from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
 from jose import JWTError, jwt
+from litestar.exceptions import NotAuthorizedException
 from msgspec import to_builtins
 
 from app.domain.auth.schemas import Token, TokenResponse
 from app.lib.settings import get_settings
-from litestar.exceptions import NotAuthorizedException
 
 settings = get_settings()
 

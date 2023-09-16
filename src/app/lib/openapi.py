@@ -1,6 +1,7 @@
-from app.lib.settings import get_settings
 from litestar.openapi.config import OpenAPIConfig
 from litestar.openapi.spec import Components, Contact, License, SecurityScheme
+
+from app.lib.settings import get_settings
 
 settings = get_settings()
 

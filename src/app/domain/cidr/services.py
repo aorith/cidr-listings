@@ -2,7 +2,6 @@ from uuid import UUID
 
 from asyncpg import Record
 from asyncpg.pool import PoolConnectionProxy
-
 from litestar.exceptions import ImproperlyConfiguredException
 
 SELECT_ENABLED_BY_TYPE_AND_ID = """
