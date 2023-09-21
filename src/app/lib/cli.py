@@ -6,6 +6,7 @@ from litestar import Litestar
 from litestar.plugins import CLIPluginProtocol
 
 from app.domain.auth.services import create_user as create_user_service
+from app.domain.auth.services import reset_password as reset_password_service
 from app.lib.db.migrations import run_migrations_from_cli
 
 
@@ -49,7 +50,7 @@ class CLIPlugin(CLIPluginProtocol):
         )
         @click.option(
             "--superuser",
-            help="Is a superuser",
+            help="Make it a superuser",
             type=click.BOOL,
             default=False,
             required=False,
@@ -60,3 +61,23 @@ class CLIPlugin(CLIPluginProtocol):
             """Create a user."""
             click.echo("Running create user")
             _run_task(create_user_service(login=login, password=password, superuser=superuser))
+
+        @cli.command(name="reset-password", help="Reset user password")
+        @click.option(
+            "--login",
+            help="Login name of the user",
+            type=click.STRING,
+            required=True,
+            show_default=False,
+        )
+        @click.option(
+            "--password",
+            help="New password",
+            type=click.STRING,
+            required=True,
+            show_default=False,
+        )
+        def reset_password(login: str, password: str) -> None:
+            """Create a user."""
+            click.echo("Running reset-user")
+            _run_task(reset_password_service(login=login, password=password))

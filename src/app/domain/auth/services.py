@@ -13,6 +13,14 @@ VALUES
     ($1, $2, $3, $4, $5);
 """
 
+UPDATE_USER_PASSWORD = """
+UPDATE user_login
+SET
+    salt = $2, hashed_password = $3
+WHERE
+    login = $1;
+"""  # noqa:S105
+
 
 async def create_user(login: str, password: str, superuser: bool = False) -> None:
     """Create a new user."""
@@ -30,6 +38,25 @@ async def create_user(login: str, password: str, superuser: bool = False) -> Non
                 await conn.execute(INSERT_USER, user.id, user.login, user.salt, user.hashed_password, user.role)
                 print(user)
                 print("User created successfully.")
+
+
+async def reset_password(login: str, password: str) -> None:
+    """Reset user password."""
+    async for conn in get_connection():
+        async with conn.transaction():
+            if not (record := await conn.fetchrow("select * from user_login where login = $1", login)):
+                print("Login doesn't exist")
+                # don't return here to avoid:
+                # RuntimeWarning: coroutine 'PoolConnectionHolder.release' was never awaited
+            else:
+                salt, hashed_password = await generate_salt_and_hashed_password(plain_password=password)
+                user = User(**record)
+                user.salt = salt
+                user.hashed_password = hashed_password
+
+                await conn.execute(UPDATE_USER_PASSWORD, user.login, user.salt, user.hashed_password)
+                print(user)
+                print("User password updated successfully.")
 
 
 async def generate_token(conn: PoolConnectionProxy, data: UserLoginOrCreate) -> TokenResponse:
