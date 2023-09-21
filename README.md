@@ -2,7 +2,7 @@
 
 ### Description
 
-I created this app because I wanted to learn and experiment with:
+This app was created to learn and experiment with:
 
 - [Litestar](https://litestar.dev/)
 - [Postgres](https://www.postgresql.org/) without ORM
@@ -14,15 +14,15 @@ I created this app because I wanted to learn and experiment with:
 - [HTMX](https://htmx.org/)
 - Manipulating IP networks (here's some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`)
 
-There is a test instance running online, but no accounts are available, however [API docs](https://cidr.iou.re/docs) are open.  
+There is a test instance [running online](https://cidr.iou.re), and a test account is available (`testuser`/`This1sForTest!`), [API docs](https://cidr.iou.re/docs) are open.
 
 This app allows you to create lists of IP addresses in their [CIDR notation](https://en.wikipedia.org/wiki/Classless_Inter-Domain_Routing#CIDR_notation).  
-Lists have two types:  
+Lists have two types:
 
 - denylist
 - safelist
 
-Safelists exist exclusively to filter the denylists, when you add an address to an **enabled** safelist, that address is removed from all the existing denylists and when you enable a disabled safelist all the denylists are filtered with the addresses of that safelist.  
+Safelists exist exclusively to filter the denylists, when you add an address to an **enabled** safelist, that address is removed from all the existing denylists and when you enable a disabled safelist all the denylists are filtered with the addresses of that safelist.
 
 For example, if you have the following networks/addresses in a denylist (or spread in many denylist it doesn't matter):
 
@@ -39,7 +39,7 @@ And you create a safelist with the following networks:
 12.12.1.12/32
 ```
 
-The denylists will be filtered and finally they will have the following:
+The denylists are filtered and end up with the following:
 
 ```
 12.12.1.0/29
@@ -55,7 +55,7 @@ The denylists will be filtered and finally they will have the following:
 66.66.1.64/26
 ```
 
-This also works if you try to add the original addresses to the denylist when a safelists is present, basically safelists act as a filter for denylists.  
+This also works if you try to add the original addresses to the denylist when a safelists is present, basically safelists act as a filter for denylists.
 
 #### About address exclusion
 
@@ -91,9 +91,9 @@ After you exclude address `a` with address `b` (checking if `b` is contained in 
 - One or many subnets if `b` is a subnet of `a`)
 - The original address `a` if `b` just doesn't exclude anything from `a`
 
-When you end up with one or multiple extra subnets after an exclusion, you need to iterate over them again to ensure that they are fully excluded with your "safe addresses". That can become tedious and very slow, you also cannot be sure on how many times you need to iterate until everything is excluded correctly.  
+When you end up with one or multiple extra subnets after an exclusion, you need to iterate over them again to ensure that they are fully excluded with your _safe addresses_. That can become tedious and slow, you also cannot be sure on how many times you need to iterate until everything is excluded correctly.
 
-That's what I solved, at least for this usercase with the following functions that exclude addresses correctly and faster:  
+That is solved with the following functions that exclude addresses faster and correctly:
 
 - This is were the background job that filters addresses starts - [filter_safe_cidrs](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/worker.py#L130-L136)
 - This takes an address and filters it using many addresses - [address_exclude_many](https://github.com/aorith/cidr-listings/blob/e2b89e98784ce80c4ca32c7a88724ace667db5c0/src/app/lib/iputils.py#L86)
@@ -101,16 +101,16 @@ That's what I solved, at least for this usercase with the following functions th
 
 ### Installation & development
 
-The scripts [run-postgres-prod.sh](run-postgres-prod.sh) and [run-app-prod.sh](run-app-prod.sh) provide an example on how to run the app, the database must be up and running before starting the app.  
+The scripts [run-postgres-prod.sh](run-postgres-prod.sh) and [run-app-prod.sh](run-app-prod.sh) provide an example on how to run the app, the database must be up and running before starting the app.
 
-To develop locally, run `make install` to create a *venv* with all the dependencies, `make test` always starts an empty database and runs all the tests.  
-The app can be started by running the `litestar` cli tool: `cd src; litestar run --reload`.  
+To develop locally, run `make install` to create a _venv_ with all the dependencies, `make test` always starts an empty database and runs all the tests.  
+The app can be started by running the `litestar` cli tool: `cd src; litestar run --reload`.
 
 ### Usage
 
-1. Create as many denylists as you need, either by using the web interface or with the API, tag them according to your needs.  
-2. Create one or many **enabled** safelists, and add all the addresses that should never be present in a denylist. If you add more in the future, denylists will be filtered automatically.
-3. Consume the denylists by *tags* using the endpoints `/v1/cidr/.*`, for example `/v1/cidr/collapsed` returns all the matched addresses collapsed into networks.
+1. Create as many denylists as you need, either by using the web interface or with the API, tag them according to your needs.
+2. Create one or many **enabled** safelists, and add all the addresses that should never be present in a denylist. If you add more in the future, denylists get filtered automatically.
+3. Consume the denylists by _tags_ using the endpoints `/v1/cidr/.*`, for example `/v1/cidr/collapsed` returns all the matched addresses collapsed into networks.
 
 ### License
 
