@@ -101,6 +101,7 @@ ignore = [
     "D100", # docstring module
     "D101", # docstring
     "RUF012", # mutable class attributes
+    "RUF100", # remove unused 'noqa' directives
     "A002", # argument "id" shadowing ...
 ]
 [tool.ruff.per-file-ignores]
