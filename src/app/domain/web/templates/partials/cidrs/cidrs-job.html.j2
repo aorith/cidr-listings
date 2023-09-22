@@ -39,7 +39,10 @@
         <tr>
             <th>CIDRs</th>
             <td>
-                {% for c in job.cidrs %}{{ c }}{% endfor %}
+                {% for c in job.cidrs %}
+                    {{ c }}
+                    <br />
+                {% endfor %}
             </td>
         </tr>
     </tbody>
