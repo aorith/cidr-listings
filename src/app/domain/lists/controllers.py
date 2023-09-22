@@ -1,4 +1,3 @@
-import msgspec
 from asyncpg.pool import PoolConnectionProxy
 from litestar import Request, Response
 from litestar.controller import Controller
@@ -13,13 +12,16 @@ from app.domain.cidr.schemas import CidrNL
 from app.domain.lists.schemas import (
     ActionEnum,
     CidrAdd,
+    CidrAddRaw,
     CidrDelete,
+    CidrDeleteRaw,
     CidrJob,
     CidrList,
     ListCreateDTO,
     ListFull,
     ListUpdateDTO,
 )
+from app.domain.lists.services import insert_cidr_job, parse_raw_cidrs_input_as_str
 from app.lib.validations import run_validation
 
 INSERT_LIST = """
@@ -44,16 +46,6 @@ WHERE
     id = $5 and user_id = $6
 RETURNING *;
 """
-
-INSERT_JOB = """
-INSERT INTO job_queue
-    (job_id, payload)
-VALUES
-    ($1, $2::jsonb)
-"""
-
-
-json_enc = msgspec.json.Encoder()
 
 
 class ListController(Controller):
@@ -146,13 +138,8 @@ class ListController(Controller):
                     cidrs=[],
                     ttl=None,
                 )
+                await insert_cidr_job(job=cidr_job, conn=conn)
 
-                async with conn.transaction():
-                    await conn.execute(
-                        INSERT_JOB,
-                        cidr_job.job_id,
-                        json_enc.encode(cidr_job).decode(),
-                    )
             return Response(ListFull(**record))
 
     @delete("/{id:str}")
@@ -218,12 +205,7 @@ class ListController(Controller):
             ttl=data.ttl,
         )
 
-        async with conn.transaction():
-            await conn.execute(
-                INSERT_JOB,
-                cidr_job.job_id,
-                json_enc.encode(cidr_job).decode(),
-            )
+        await insert_cidr_job(job=cidr_job, conn=conn)
         return Response(cidr_job)
 
     @post("/{id:str}/cidr/delete")
@@ -248,10 +230,71 @@ class ListController(Controller):
             ttl=None,
         )
 
-        async with conn.transaction():
-            await conn.execute(
-                INSERT_JOB,
-                cidr_job.job_id,
-                json_enc.encode(cidr_job).decode(),
-            )
+        await insert_cidr_job(job=cidr_job, conn=conn)
+        return Response(cidr_job)
+
+    @post("/{id:str}/cidr/add/raw")
+    async def add_cidrs_raw(
+        self, request: Request[User, Token, State], conn: PoolConnectionProxy, id: str, data: CidrAddRaw
+    ) -> Response[CidrJob]:
+        """Create a job to add CIDRs.
+
+        The string sent will be parsed in search of valid ipv4/ipv6 CIDRs.
+
+        Validation of CIDRs is performed asynchronously.
+
+        - CIDRs from the non-routable address space are discarded automatically if
+        the server side environment variable `ONLY_GLOBAL_CIDRS` is `True` (which is by default).
+
+        - If a CIDR already exist in the list its `ttl` will be updated.
+
+        - If the `list_type` is `SAFE` another job will delete all the matching CIDRs from lists of type `DENY`.
+        """
+        if data.ttl is not None and data.ttl <= 0:
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="TTL must be greater than 0.")
+
+        list_record = await conn.fetchrow("select * from list where id = $1 and user_id = $2", id, request.user.id)
+        if not list_record:
+            raise NotFoundException(f"List {id} not found.")
+
+        ipv4_cidrs, ipv6_cidrs = parse_raw_cidrs_input_as_str(raw_data=data.cidrs)
+        cidr_job = CidrJob(
+            action=ActionEnum.ADD,
+            list_id=list_record["id"],
+            list_type=list_record["list_type"],
+            list_enabled=list_record["enabled"],
+            user_id=request.user.id,
+            cidrs=list(ipv4_cidrs | ipv6_cidrs),
+            ttl=data.ttl,
+        )
+
+        await insert_cidr_job(job=cidr_job, conn=conn)
+        return Response(cidr_job)
+
+    @post("/{id:str}/cidr/delete/raw")
+    async def delete_cidrs_raw(
+        self, request: Request[User, Token, State], conn: PoolConnectionProxy, id: str, data: CidrDeleteRaw
+    ) -> Response[CidrJob]:
+        """Create a job to delete CIDRs.
+
+        The string sent will be parsed in search of valid ipv4/ipv6 CIDRs.
+
+        Validation of CIDRs is performed asynchronously.
+        """
+        list_record = await conn.fetchrow("select * from list where id = $1 and user_id = $2", id, request.user.id)
+        if not list_record:
+            raise NotFoundException(f"List {id} not found.")
+
+        ipv4_cidrs, ipv6_cidrs = parse_raw_cidrs_input_as_str(raw_data=data.cidrs)
+        cidr_job = CidrJob(
+            action=ActionEnum.DELETE,
+            list_id=list_record["id"],
+            list_type=list_record["list_type"],
+            list_enabled=list_record["enabled"],
+            user_id=request.user.id,
+            cidrs=list(ipv4_cidrs | ipv6_cidrs),
+            ttl=None,
+        )
+
+        await insert_cidr_job(job=cidr_job, conn=conn)
         return Response(cidr_job)

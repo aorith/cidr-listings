@@ -69,11 +69,23 @@ WHERE
         )
 """
 
+SELECT_ALL_CIDRS_BY_LIST_ID = """
+SELECT
+    address, list_id, expires_at
+FROM
+    cidr
+WHERE
+    list_id = (
+            SELECT id FROM list WHERE
+                id = $1
+        )
+"""
+
 
 async def parse_raw_cidrs(
     cidrs: list[str], only_global: bool = True
 ) -> tuple[Counter, set[IPv4Network], set[IPv6Network]]:
-    """Parses the initial list of CIDRs coming from a job.
+    """Parse the initial list of CIDRs coming from a job.
 
     1. Converts the str representation to an IPv4Network/IPv6Network object, filtering malformed
     2. Filters non routable/non global addresses if ``only_global`` is True
@@ -114,11 +126,10 @@ async def filter_safe_cidrs(
     user_id: UUID,
     cidrs: set[IPv4Network | IPv6Network],
 ) -> tuple[set[IPv4Network], set[IPv6Network]]:
-    """Filters input ``cidrs`` that are present on enabled lists of type SAFE for ``user_id``."""
+    """Filter input ``cidrs`` that are present on enabled lists of type SAFE for ``user_id``."""
     safe_cidrs = set()
     for safe_cidr_record in await conn.fetch(
-        "select address from cidr where list_id in "
-        + "(select id from list where enabled = true and list_type = $1 and user_id = $2)",
+        "select address from cidr where list_id in (select id from list where enabled = true and list_type = $1 and user_id = $2)",
         ListTypeEnum.SAFE,
         user_id,
     ):
@@ -161,7 +172,7 @@ async def delete_excluded_cidrs(
     subnets that do not contain the one in the safelist.
     """
     if list_id:
-        exclusion_record = await conn.fetch(SELECT_ENABLED_CIDRS_BY_LIST_ID, list_id)
+        exclusion_record = await conn.fetch(SELECT_ALL_CIDRS_BY_LIST_ID, list_id)
     elif list_type:
         exclusion_record = await conn.fetch(SELECT_ENABLED_CIDRS_BY_LIST_TYPE, user_id, list_type)
     else:
@@ -203,7 +214,7 @@ async def delete_excluded_cidrs(
 
 
 async def add_cidrs(conn: Connection, cidr_job: CidrJob) -> None:
-    """Adds the CIDRs included in the job."""
+    """Add the CIDRs included in the job."""
     stime = time.perf_counter()
 
     # Initial parsing
@@ -239,7 +250,7 @@ async def add_cidrs(conn: Connection, cidr_job: CidrJob) -> None:
 
 
 async def delete_cidrs(conn: Connection, cidr_job: CidrJob) -> None:
-    """Deletes the CIDRs included in the job."""
+    """Delete the CIDRs included in the job."""
     stime = time.perf_counter()
 
     # Initial parsing
@@ -255,7 +266,7 @@ async def delete_cidrs(conn: Connection, cidr_job: CidrJob) -> None:
 
 
 async def update_cleanup(conn: Connection, cidr_job: CidrJob) -> None:
-    """Does a CIDR cleanup from denylists when a safelist is re-enabled."""
+    """Do a CIDR cleanup from denylists when a safelist is re-enabled."""
     stime = time.perf_counter()
 
     # This job doesn't actually carry the CIDRs from the safelist, we get them here

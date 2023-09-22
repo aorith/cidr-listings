@@ -88,8 +88,17 @@ class CidrDelete(Struct):
     cidrs: list[CidrType]
 
 
+class CidrDeleteRaw(Struct):
+    cidrs: str
+
+
 class CidrAdd(CidrDelete):
     cidrs: list[CidrType]
+    ttl: CidrTTL = None
+
+
+class CidrAddRaw(CidrDelete):
+    cidrs: str
     ttl: CidrTTL = None
 
 

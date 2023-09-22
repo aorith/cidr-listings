@@ -1,5 +1,4 @@
 import ipaddress
-import itertools
 import re
 from typing import Annotated
 from uuid import UUID
@@ -19,15 +18,12 @@ from msgspec import ValidationError
 from app.domain.auth.schemas import Token, User, UserLoginOrCreate
 from app.domain.auth.services import generate_token
 from app.domain.cidr.services import get_cidr_records_paginated
-from app.domain.lists.controllers import INSERT_JOB, INSERT_LIST, UPDATE_LIST, json_enc
+from app.domain.lists.controllers import INSERT_LIST, UPDATE_LIST
 from app.domain.lists.schemas import ActionEnum, CidrJob, ListFull
+from app.domain.lists.services import insert_cidr_job, parse_raw_cidrs_input, parse_raw_cidrs_input_as_str
 from app.lib.settings import get_settings
 
 settings = get_settings()
-
-
-IPV4_RE = re.compile(r"((?:[0-9]{1,3}\.){3}[0-9]{1,3}(?:\/[0-9]{1,2})?)")
-IPV6_RE = re.compile(r"([A-Fa-f0-9:]+:[A-Fa-f0-9]*(?:\/[0-9]{1,3})?)")
 
 
 SELECT_LISTS_WITH_CIDR_COUNT = """
@@ -296,15 +292,7 @@ class WebPartCidrController(Controller):
         ipv4_valid = set()
         ipv6_valid = set()
 
-        for i in itertools.chain(re.finditer(IPV4_RE, data["cidrs-raw"]), re.finditer(IPV6_RE, data["cidrs-raw"])):
-            try:
-                ipn = ipaddress.ip_network(i.group(0))
-                if ipn.version == 4:
-                    ipv4_valid.add(ipn.compressed)
-                else:
-                    ipv6_valid.add(ipn.compressed)
-            except ValueError:
-                continue
+        ipv4_valid, ipv6_valid = parse_raw_cidrs_input_as_str(raw_data=data["cidrs-raw"])
 
         ipv4_string = "\n".join(ipv4_valid)
         ipv6_string = "\n".join(ipv6_valid)
@@ -333,24 +321,10 @@ class WebPartCidrController(Controller):
         data: Annotated[dict, Body(media_type=RequestEncodingType.URL_ENCODED)],
     ) -> Template:
         """Submit parsed CIDRs as a Job."""
-        ipv4_valid = set()
-        ipv6_valid = set()
+        ipv4_valid, ipv6_valid = parse_raw_cidrs_input(raw_data=data["ipv4-cidrs"] + " " + data["ipv6-cidrs"])
 
-        for i in itertools.chain(re.finditer(IPV4_RE, data["ipv4-cidrs"]), re.finditer(IPV6_RE, data["ipv6-cidrs"])):
-            try:
-                ipn = ipaddress.ip_network(i.group(0))
-                if ipn.version == 4:
-                    ipv4_valid.add(ipn)
-                else:
-                    ipv6_valid.add(ipn)
-            except ValueError:
-                continue
-
-        cidrs = [
-            x.compressed
-            for x in itertools.chain(
-                ipaddress.collapse_addresses(iter(ipv4_valid)), ipaddress.collapse_addresses(iter(ipv6_valid))
-            )
+        cidrs = [x.compressed for x in ipaddress.collapse_addresses(iter(ipv4_valid))] + [
+            x.compressed for x in ipaddress.collapse_addresses(iter(ipv6_valid))
         ]
 
         list_record = await conn.fetchrow(
@@ -368,14 +342,8 @@ class WebPartCidrController(Controller):
             cidrs=cidrs,
             ttl=None if int(data["ttl"]) == 0 else int(data["ttl"]),
         )
-        cidr_job_json = json_enc.encode(cidr_job).decode()
 
-        async with conn.transaction():
-            await conn.execute(
-                INSERT_JOB,
-                cidr_job.job_id,
-                cidr_job_json,
-            )
+        await insert_cidr_job(job=cidr_job, conn=conn)
 
         return Template(
             template_name="partials/cidrs/cidrs-job.html.j2",
