@@ -2,11 +2,11 @@ import os
 import time
 
 import pytest
-from app.lib.settings import get_settings
-from app.main import app
-
 from litestar.status_codes import HTTP_200_OK
 from litestar.testing import AsyncTestClient
+
+from app.lib.settings import get_settings
+from app.main import app
 
 settings = get_settings()
 

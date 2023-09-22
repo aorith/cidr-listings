@@ -1,12 +1,4 @@
-from app.domain.lists.schemas import (
-    MAX_DESCRIPTION_LEN,
-    MAX_LIST_ID_LEN,
-    MAX_TAG_LEN,
-    ListTypeEnum,
-)
-from app.lib.settings import get_settings
 from conftest import get_api_token_header
-
 from litestar.status_codes import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -15,6 +7,14 @@ from litestar.status_codes import (
     HTTP_404_NOT_FOUND,
 )
 from litestar.testing import AsyncTestClient
+
+from app.domain.lists.schemas import (
+    MAX_DESCRIPTION_LEN,
+    MAX_LIST_ID_LEN,
+    MAX_TAG_LEN,
+    ListTypeEnum,
+)
+from app.lib.settings import get_settings
 
 settings = get_settings()
 

@@ -1,12 +1,12 @@
 import ipaddress
 
 import pytest
-from app.domain.lists.schemas import ListTypeEnum
-from app.lib.worker import CidrWorker
 from conftest import get_api_token_header
-
 from litestar.status_codes import HTTP_200_OK, HTTP_201_CREATED
 from litestar.testing import AsyncTestClient
+
+from app.domain.lists.schemas import ListTypeEnum
+from app.lib.worker import CidrWorker
 
 
 @pytest.mark.asyncio

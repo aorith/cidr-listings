@@ -1,6 +1,4 @@
-from app.lib.settings import get_settings
 from conftest import get_api_token_header
-
 from litestar.status_codes import (
     HTTP_200_OK,
     HTTP_201_CREATED,
@@ -9,6 +7,8 @@ from litestar.status_codes import (
     HTTP_409_CONFLICT,
 )
 from litestar.testing import AsyncTestClient
+
+from app.lib.settings import get_settings
 
 settings = get_settings()
 
