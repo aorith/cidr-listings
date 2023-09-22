@@ -38,12 +38,7 @@
         </tr>
         <tr>
             <th>CIDRs</th>
-            <td>
-                {% for c in job.cidrs %}
-                    {{ c }}
-                    <br />
-                {% endfor %}
-            </td>
+            <td>{{ ", ".join(job.cidrs) }}</td>
         </tr>
     </tbody>
 </table>

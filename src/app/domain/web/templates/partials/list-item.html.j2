@@ -12,7 +12,7 @@
         <span class="{{ 'green' if item['enabled'] else 'red' }}">{{ "✓" if item["enabled"] else "✗"
         }}</span>
     </td>
-    <td>{{ item["tags"] }}</td>
+    <td>{{ ", ".join(item["tags"]) }}</td>
     <td>{{ item["description"] }}</td>
     <td>
         <img class="edit"
