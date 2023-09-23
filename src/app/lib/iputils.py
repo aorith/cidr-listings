@@ -13,29 +13,27 @@ def exclude_address_raw(
     base_range: tuple[int, int],
     exclude_range: tuple[int, int],
 ) -> Generator[tuple[int, int], None, None]:
-    """Excludes a network from another..
+    """Excludes a network from another.
 
-    The range can be obtained with a IPv4Network or IPv6Network converting it
-    to an integer or with the protected field ``_ip``:
-        addr_range = obj.network_address._ip, obj.broadcast_address._ip
-    I.E:
+    The range can be obtained from an ipaddress.IPv[4|6]Network object by casting it
+    to an integer or accessing the protected field ``_ip``, i.e.:
+
         ```
         ipn = IPv4Network("10.10.0.0/24")
         ipn.network_address._ip, ipn.broadcast_address._ip
         (168427520, 168427775)
         ```
 
-    Both ranges must be of the same version.
+    Both ranges must be of the same IP version.
 
-    Parameters
-    ----------
-        base_range (tuple[int, int]): Base subnet as a tuple of integers (start, end)
-        exclude_range (tuple[int, int]): Exclusion subnet as a tuple of integers (start, end)
+    Args:
+    ----
+        base_range (tuple[int, int]): IP Range to be excluded
+        exclude_range(tuple[int, int]): IP Range that tries to exclude base_range
 
-    Returns
+    Returns:
     -------
-        final_range: Iterator[tuple[int, int]]: Ranges/subnets after exclusion
-                        must be converted back with ipaddress.summarize_address_range
+        Generator[tuple[int, int], None, None]: IP Ranges left after the exclusion
     """
     # --x--x-|--|-----
     # -------|--|-x-x-
@@ -75,7 +73,10 @@ def exclude_address(
     exclude_net: IPv6Network,
     base_class,
 ) -> Generator[IPv4Network | IPv6Network, None, None]:
-    """Wrapper around exclude_address_raw that accepts and returns ipaddress network objects."""
+    """Excludes a network from another.
+
+    Accepts and returns ipaddress network objects.
+    """
     base_range = base_net.network_address._ip, base_net.broadcast_address._ip  # type: ignore
     exclude_range = exclude_net.network_address._ip, exclude_net.broadcast_address._ip  # type: ignore
 
