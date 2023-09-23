@@ -71,7 +71,7 @@ db_reset:
 reset_app:
 	echo "Resetting the db ..."
 	make db_reset
-	@sleep 5
+	@sleep 6
 	@$(LOAD_VENV) && \
 		echo "Running migrations and creating test superuser ..." && \
 		cd src && \

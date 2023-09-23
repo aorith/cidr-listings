@@ -232,7 +232,6 @@ async def test_job_tasks(test_client: AsyncTestClient) -> None:
         assert sorted(response.json()) == sorted(["66.66.1.128/25", "66.66.1.64/26"])
 
         # TEST ADD AND DELETE RAW
-
         # test delete raw
         delete_raw_cidrs = {
             "cidrs": "hello this is a raw input, I want to delete: 66.66.1.64/26, the following are invalid addresses 32.0 3.2 1.1.1.1/33"
@@ -266,3 +265,57 @@ async def test_job_tasks(test_client: AsyncTestClient) -> None:
         assert response.status_code == HTTP_200_OK
         assert len(response.json()) == 2
         assert sorted(response.json()) == sorted(["66.66.1.128/25", "66.66.1.64/26"])
+
+        # test IP regex
+        add_raw_cidrs2 = {
+            "cidrs": """
+            Invalid addresses:
+
+            12.12.12.1299
+            1212.12.12.1299
+            hello1.1.1.1bye
+            fasd::dsf:bf
+            1.1.1.1/33
+            2c0f:fb50::/129
+
+            Valid addresses:
+            23.23.23.23/32
+            13.14.15.16/24 --> raw input is not strict with hosts bits set, this transforns into: 13.14.15.0/24
+            2c0f:fb50::/128
+            """
+        }
+        response = await client.post(
+            f"/v1/list/{list_deny['id']}/cidr/add/raw", json=add_raw_cidrs2, headers=api_token_header
+        )
+        assert response.status_code == HTTP_201_CREATED
+        await worker.run_once()
+
+        response = await client.get(
+            f"/v1/cidr/collapsed?list_type={ListTypeEnum.DENY}&list_id={list_deny['id']}", headers=api_token_header
+        )
+        assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 5
+        assert sorted(response.json()) == sorted(
+            ["66.66.1.128/25", "66.66.1.64/26", "23.23.23.23/32", "13.14.15.0/24", "2c0f:fb50::/128"]
+        )
+
+        # TEST THAT SPECIAL ADDRESSES NEVER TOUCH THE DB
+        list_safe_empty = {"enabled": True, "id": "TEST_CIDRJOB_EMPTY_SAFE1", "list_type": ListTypeEnum.SAFE}
+        response = await client.post("/v1/list", json=list_safe_empty, headers=api_token_header)
+        assert response.status_code == HTTP_201_CREATED
+        assert response.json()["id"] == list_safe_empty["id"]
+        assert response.json()["list_type"] == list_safe_empty["list_type"]
+
+        invalid_addresses = {"cidrs": ["0.0.0.0", "0.0.0.0/0"]}
+        response = await client.post(
+            f"/v1/list/{list_safe_empty['id']}/cidr/add", json=invalid_addresses, headers=api_token_header
+        )
+        assert response.status_code == HTTP_201_CREATED
+        await worker.run_once()
+
+        response = await client.get(
+            f"/v1/cidr/collapsed?list_type={ListTypeEnum.SAFE}&list_id={list_safe_empty['id']}",
+            headers=api_token_header,
+        )
+        assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 0

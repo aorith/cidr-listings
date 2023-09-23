@@ -218,7 +218,25 @@ async def add_cidrs(conn: Connection, cidr_job: CidrJob) -> None:
     stime = time.perf_counter()
 
     # Initial parsing
-    result, ipv4_cidrs, ipv6_cidrs = await parse_raw_cidrs(cidrs=cidr_job.cidrs)
+    result, ipv4_cidrs_parsed, ipv6_cidrs_parsed = await parse_raw_cidrs(cidrs=cidr_job.cidrs)
+
+    # Remove special addresses that should not touch the DB, like 0.0.0.0
+    ipv4_cidrs: set[IPv4Network] = set()
+    for c in ipv4_cidrs_parsed:
+        if c.prefixlen == 0:
+            continue
+        if c.compressed.split("/")[0] == "0.0.0.0":  # noqa: S104
+            continue
+        ipv4_cidrs.add(c)
+    ipv4_cidrs_parsed.clear()
+
+    ipv6_cidrs: set[IPv6Network] = set()
+    for c in ipv6_cidrs_parsed:
+        if c.prefixlen == 0:
+            continue
+        ipv6_cidrs.add(c)
+    ipv6_cidrs_parsed.clear()
+
     if not ipv4_cidrs and not ipv6_cidrs:
         print(f"Add({cidr_job.list_type}): {result}")
         return
