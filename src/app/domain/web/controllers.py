@@ -259,7 +259,6 @@ class WebPartListController(Controller):
         if not records:
             raise NotFoundException(f"List {id} not found.")
         item = dict(records[0])
-        item["tags"] = ",".join(item["tags"])
 
         return Template(template_name="partials/list-item.html.j2", context={"new_item": True, "item": item})
 
