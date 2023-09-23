@@ -15,8 +15,8 @@ VALUES
 """
 
 
-IPV4_RE = re.compile(r"((?:[0-9]{1,3}\.){3}[0-9]{1,3}(?:\/[0-9]{1,2})?)")
-IPV6_RE = re.compile(r"([A-Fa-f0-9:]+:[A-Fa-f0-9]*(?:\/[0-9]{1,3})?)")
+IPV4_RE = re.compile(r"\b((?:[0-9]{1,3}\.){3}[0-9]{1,3}(?:\/[0-9]{1,2})?)\b")
+IPV6_RE = re.compile(r"\b([A-Fa-f0-9:]+:[A-Fa-f0-9]*(?:\/[0-9]{1,3})?)\b")
 
 json_enc = msgspec.json.Encoder()
 
