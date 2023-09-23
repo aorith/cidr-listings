@@ -25,22 +25,25 @@
                 <b>CIDR Listings</b>
             </div>
             <div class="header-right"
-                 hx-get="/parts/list/"
+                 {% if hx_get and hx_push_url %}hx-get="{{ hx_get }}" hx-push-url="{{ hx_push_url }}"{% endif %}
                  hx-trigger="load"
                  hx-target="#appcontent">
                 <ul>
                     <li>
                         <a hx-get="/parts/list/"
+                           hx-push-url="/lists"
                            hx-swap="innerHTML transition:true"
                            hx-target="#appcontent">Lists</a>
                     </li>
                     <li>
                         <a hx-get="/parts/cidr/"
+                           hx-push-url="/cidrs"
                            hx-swap="innerHTML transition:true"
                            hx-target="#appcontent">CIDRs</a>
                     </li>
                     <li>
                         <a hx-get="/parts/cidr/ni"
+                           hx-push-url="/network-info"
                            hx-swap="innerHTML transition:true"
                            hx-target="#appcontent">Network Info</a>
                     </li>

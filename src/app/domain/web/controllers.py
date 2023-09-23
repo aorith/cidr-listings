@@ -90,10 +90,24 @@ async def get_network_info(address: str | None, conn: PoolConnectionProxy, user_
 class WebController(Controller):
     tags = ["Web"]
 
-    @get("/", include_in_schema=False)
+    @get(["/", "/lists", "/cidrs", "/network-info"], include_in_schema=False)
     async def home(self, request: Request[User, Token, State]) -> Template:
         """Home."""
-        return Template(template_name="base.html.j2", context={"login": request.user.login})
+        hx_get = None
+        hx_push_url = None
+        if request.url.path in ["/", "/lists"]:
+            hx_get = "/parts/list/"
+            hx_push_url = "/lists"
+        elif request.url.path == "/cidrs":
+            hx_get = "/parts/cidr"
+            hx_push_url = "/cidrs"
+        elif request.url.path == "/cidrs":
+            hx_get = "/parts/cidr/ni"
+            hx_push_url = "/network-info"
+        return Template(
+            template_name="base.html.j2",
+            context={"login": request.user.login, "hx_get": hx_get, "hx_push_url": hx_push_url},
+        )
 
     @get(path="/login", include_in_schema=False)
     async def login(self) -> Template:
