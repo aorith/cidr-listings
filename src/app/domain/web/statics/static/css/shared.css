@@ -85,6 +85,7 @@ tr.htmx-swapping td {
 body {
   font-family: sans-serif;
   box-sizing: border-box;
+  overflow: auto;
 }
 
 header {
@@ -302,8 +303,37 @@ textarea[readonly] {
 }
 
 @media (max-width: 1080px) {
+  header {
+    display: block;
+    width: 250px;
+    padding: 14px;
+    max-width: inherit;
+  }
+  header div {
+    height: 200px;
+  }
+  header div,
+  header ul {
+    display: block;
+    width: 1%;
+    white-space: nowrap;
+    text-align: left;
+    align-items: left;
+    text-align: left;
+    justify-content: left;
+  }
+
+  table,
+  .center,
   main {
-    margin: 5px !important;
-    padding: 2px !important;
+    margin: 2px !important;
+    width: 100%;
+  }
+
+  table,
+  th,
+  td {
+    padding: 4px !important;
+    width: 1% !important;
   }
 }
