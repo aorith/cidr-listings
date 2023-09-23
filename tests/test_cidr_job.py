@@ -228,6 +228,41 @@ async def test_job_tasks(test_client: AsyncTestClient) -> None:
             f"/v1/cidr/collapsed?list_type={ListTypeEnum.DENY}&list_id={list_deny['id']}", headers=api_token_header
         )
         assert response.status_code == HTTP_200_OK
-        assert len(response.json()) > 0
+        assert len(response.json()) == 2
+        assert sorted(response.json()) == sorted(["66.66.1.128/25", "66.66.1.64/26"])
 
-        # Test add raw
+        # TEST ADD AND DELETE RAW
+
+        # test delete raw
+        delete_raw_cidrs = {
+            "cidrs": "hello this is a raw input, I want to delete: 66.66.1.64/26, the following are invalid addresses 32.0 3.2 1.1.1.1/33"
+        }
+        response = await client.post(
+            f"/v1/list/{list_deny['id']}/cidr/delete/raw", json=delete_raw_cidrs, headers=api_token_header
+        )
+        assert response.status_code == HTTP_201_CREATED
+        await worker.run_once()
+
+        response = await client.get(
+            f"/v1/cidr/collapsed?list_type={ListTypeEnum.DENY}&list_id={list_deny['id']}", headers=api_token_header
+        )
+        assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 1
+        assert sorted(response.json()) == sorted(["66.66.1.128/25"])
+
+        # test add raw
+        add_raw_cidrs = {
+            "cidrs": "hello this is a raw input, I want to add again: 66.66.1.64/26, the following are invalid addresses 32.0 3.2 1.1.1.1/33 fasd::dsf:bf"
+        }
+        response = await client.post(
+            f"/v1/list/{list_deny['id']}/cidr/add/raw", json=add_raw_cidrs, headers=api_token_header
+        )
+        assert response.status_code == HTTP_201_CREATED
+        await worker.run_once()
+
+        response = await client.get(
+            f"/v1/cidr/collapsed?list_type={ListTypeEnum.DENY}&list_id={list_deny['id']}", headers=api_token_header
+        )
+        assert response.status_code == HTTP_200_OK
+        assert len(response.json()) == 2
+        assert sorted(response.json()) == sorted(["66.66.1.128/25", "66.66.1.64/26"])
