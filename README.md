@@ -12,7 +12,7 @@ This app was created to learn and experiment with:
 - [Msgspec](https://github.com/jcrist/msgspec) instead of [pydantic](https://github.com/pydantic/pydantic)
 - [JWT](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/domain/auth/jwt.py) [(Json Web Token)](.org/wiki/JSON_Web_Token)
 - [HTMX](https://htmx.org/)
-- Manipulating IP networks (here's some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`)
+- Manipulating IP networks (here's some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/469c87fa3488bf41ca4c24eefb94d7050b25f44f/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`)
 
 There is a test instance [running online](https://cidr.iou.re), and a test account is available (`testuser`/`This1sForTest!`), [API docs](https://cidr.iou.re/docs) are open.
 
