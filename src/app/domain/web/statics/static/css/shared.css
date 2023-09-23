@@ -74,13 +74,11 @@ tr.htmx-swapping td {
 }
 
 ::view-transition-old(slide-it) {
-  animation:
-    180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
+  animation: 180ms cubic-bezier(0.4, 0, 1, 1) both fade-out,
     600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-to-left;
 }
 ::view-transition-new(slide-it) {
-  animation:
-    420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
+  animation: 420ms cubic-bezier(0, 0, 0.2, 1) 90ms both fade-in,
     600ms cubic-bezier(0.4, 0, 0.2, 1) both slide-from-right;
 }
 
@@ -94,9 +92,7 @@ header {
   background-color: #fafafa;
   padding: 12px 2px 0 2px;
   margin: 0 0 14px 0;
-  box-shadow:
-    0 0 5px 0 rgba(0, 0, 0, 0.3),
-    0 2px 2px 0 rgba(0, 0, 0, 0.4);
+  box-shadow: 0 0 5px 0 rgba(0, 0, 0, 0.3), 0 2px 2px 0 rgba(0, 0, 0, 0.4);
 }
 
 .header-left {
@@ -202,9 +198,7 @@ table {
   border-collapse: collapse;
   border: 1px solid #c1c1c1;
   background-color: #fafafa;
-  box-shadow:
-    0 0 3px 0 rgba(0, 0, 0, 0.2),
-    0 2px 2px 0 rgba(0, 0, 0, 0.24);
+  box-shadow: 0 0 3px 0 rgba(0, 0, 0, 0.2), 0 2px 2px 0 rgba(0, 0, 0, 0.24);
 }
 
 th,
@@ -224,6 +218,15 @@ tbody tr:nth-child(odd) {
 
 tbody tr:nth-child(even) {
   background-color: #f1f1f1;
+}
+
+/* don't wrap the content of the table cells */
+tr td {
+  white-space: nowrap;
+}
+/* try to reduce last table column cells to the minimum size */
+tr th.action {
+  width: 1%;
 }
 
 caption {
