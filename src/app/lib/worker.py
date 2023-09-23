@@ -269,6 +269,9 @@ async def update_cleanup(conn: Connection, cidr_job: CidrJob) -> None:
     """Do a CIDR cleanup from denylists when a safelist is re-enabled."""
     stime = time.perf_counter()
 
+    if cidr_job.list_type != ListTypeEnum.SAFE:
+        raise ValueError("update_cleanup() should only process safe lists.")
+
     # This job doesn't actually carry the CIDRs from the safelist, we get them here
     num_addresses = 0
     all_addresses = set()

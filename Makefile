@@ -40,12 +40,8 @@ upgrade: .venv
 .PHONY: test
 test: .venv
 	@$(LOAD_VENV) && \
-		echo "Resetting the db ..." && \
-		make db_reset && \
-		sleep 5 && \
-		echo "Running migrations and creating the superuser for the tests..." && \
-		cd src && litestar run-db-migrations && litestar create-user --login $(TEST_USER) --password $(TEST_USER_PASSWORD) --superuser && \
-		cd .. && echo "Running tests ..." && \
+		make reset_app && \
+		echo "Running tests ..." && \
 		pytest --show-capture=all --verbosity=10
 
 # Teardown test DB
@@ -69,3 +65,16 @@ db_reset:
 	make db_teardown
 	make db_start
 	@sleep 1
+
+# Reset app with migrations & test user
+.PHONY: reset_app
+reset_app:
+	echo "Resetting the db ..."
+	make db_reset
+	@sleep 5
+	@$(LOAD_VENV) && \
+		echo "Running migrations and creating test superuser ..." && \
+		cd src && \
+		litestar run-db-migrations && \
+		litestar create-user --login $(TEST_USER) --password $(TEST_USER_PASSWORD) --superuser && \
+		cd ..

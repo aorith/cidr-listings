@@ -221,8 +221,13 @@ async def test_job_tasks(test_client: AsyncTestClient) -> None:
         # re-enable and test that cidrs are returned again
         response = await client.put(f"/v1/list/{list_deny['id']}", json=list_deny, headers=api_token_header)
         assert response.status_code == HTTP_200_OK
+        # run worker (not required but might catch bugs with update_cleanup
+        await worker.run_once()
+
         response = await client.get(
             f"/v1/cidr/collapsed?list_type={ListTypeEnum.DENY}&list_id={list_deny['id']}", headers=api_token_header
         )
         assert response.status_code == HTTP_200_OK
         assert len(response.json()) > 0
+
+        # Test add raw

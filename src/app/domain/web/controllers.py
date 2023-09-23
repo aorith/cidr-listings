@@ -19,7 +19,7 @@ from app.domain.auth.schemas import Token, User, UserLoginOrCreate
 from app.domain.auth.services import generate_token
 from app.domain.cidr.services import get_cidr_records_paginated
 from app.domain.lists.controllers import INSERT_LIST, UPDATE_LIST
-from app.domain.lists.schemas import ActionEnum, CidrJob, ListFull
+from app.domain.lists.schemas import ActionEnum, CidrJob, ListFull, ListTypeEnum
 from app.domain.lists.services import insert_cidr_job, parse_raw_cidrs_input, parse_raw_cidrs_input_as_str
 from app.lib.settings import get_settings
 
@@ -227,6 +227,25 @@ class WebPartListController(Controller):
 
         async with conn.transaction():
             record = await conn.fetchrow(
+                "select id, enabled from list where id = $1 and user_id = $2", id, request.user.id
+            )
+            if not record:
+                raise NotFoundException(f"List {id} not found.")
+
+            # force deny cidrs cleanup if the list is safe and goes from disabled to enabled
+            if data["list_type"] == ListTypeEnum.SAFE and not record["enabled"] and data.get("enabled", False):
+                cidr_job = CidrJob(
+                    action=ActionEnum.UPDATE,
+                    list_id=id,
+                    list_type=data["list_type"],
+                    list_enabled=data["enabled"],
+                    user_id=request.user.id,
+                    cidrs=[],
+                    ttl=None,
+                )
+                await insert_cidr_job(job=cidr_job, conn=conn)
+
+            record = await conn.fetchrow(
                 UPDATE_LIST,
                 updated_list.list_type,
                 updated_list.enabled,
@@ -235,8 +254,6 @@ class WebPartListController(Controller):
                 id,
                 request.user.id,
             )
-            if not record:
-                raise NotFoundException(f"List {id} not found.")
 
         records = await conn.fetch(SELECT_LIST_WITH_CIDR_COUNT, request.user.id, id)
         if not records:

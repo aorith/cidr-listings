@@ -19,6 +19,7 @@ from app.domain.lists.schemas import (
     CidrList,
     ListCreateDTO,
     ListFull,
+    ListTypeEnum,
     ListUpdateDTO,
 )
 from app.domain.lists.services import insert_cidr_job, parse_raw_cidrs_input_as_str
@@ -128,7 +129,7 @@ class ListController(Controller):
                 raise NotFoundException(f"List {id} not found.")
 
             # force deny cidrs cleanup if the list is safe and goes from disabled to enabled
-            if not current_record["enabled"] and to_update.get("enabled", False):
+            if list_type == ListTypeEnum.SAFE and not current_record["enabled"] and to_update.get("enabled", False):
                 cidr_job = CidrJob(
                     action=ActionEnum.UPDATE,
                     list_id=id,
