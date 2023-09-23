@@ -100,13 +100,33 @@ class WebController(Controller):
             hx_push_url = "/lists"
         elif request.url.path == "/cidrs":
             hx_get = "/parts/cidr"
-            hx_push_url = "/cidrs"
-        elif request.url.path == "/cidrs":
+            hx_push_url = request.url.path
+        elif request.url.path == "/network-info":
             hx_get = "/parts/cidr/ni"
-            hx_push_url = "/network-info"
+            hx_push_url = request.url.path
         return Template(
             template_name="base.html.j2",
             context={"login": request.user.login, "hx_get": hx_get, "hx_push_url": hx_push_url},
+        )
+
+    @get("/list/{id:str}", include_in_schema=False)
+    async def home_list(self, request: Request[User, Token, State], id: str) -> Template:
+        """Home/list."""
+        return Template(
+            template_name="base.html.j2",
+            context={"login": request.user.login, "hx_get": f"/parts/list/{id}", "hx_push_url": request.url.path},
+        )
+
+    @get("/cidr/{ip:str}/{prefix:str}", include_in_schema=False)
+    async def home_cidr(self, request: Request[User, Token, State], ip: str, prefix: str) -> Template:
+        """Home/cidr."""
+        return Template(
+            template_name="base.html.j2",
+            context={
+                "login": request.user.login,
+                "hx_get": f"/parts/cidr/ni/{ip}/{prefix}",
+                "hx_push_url": request.url.path,
+            },
         )
 
     @get(path="/login", include_in_schema=False)

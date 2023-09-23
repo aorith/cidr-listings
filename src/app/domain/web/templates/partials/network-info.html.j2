@@ -12,6 +12,7 @@
                    required />
             <button type="submit"
                     hx-post="/parts/cidr/ni"
+                    hx-push-url="/network-info"
                     hx-swap="innerHTML transition:true"
                     hx-target="#network-info"
                     hx-target-400="#errors"
@@ -73,6 +74,7 @@
                     <td>Supernet</td>
                     <td>
                         <a hx-get="/parts/cidr/ni/{{ supernet.compressed }}"
+                           hx-push-url="/cidr/{{ supernet.compressed }}"
                            hx-swap="innerHTML transition:true"
                            hx-target="#appcontent">{{
                             supernet.compressed
@@ -85,6 +87,7 @@
                     <td>
                         {% for subnet in subnets %}
                             <a hx-get="/parts/cidr/ni/{{ subnet.compressed }}"
+                               hx-push-url="/cidr/{{ subnet.compressed }}"
                                hx-swap="innerHTML transition:true"
                                hx-target="#appcontent">{{
                             subnet.compressed }}</a>
@@ -97,6 +100,7 @@
                     <td>
                         {% for lst in lists %}
                             <a hx-get="/parts/list/{{ lst }}"
+                               hx-push-url="/list/{{ lst }}"
                                hx-swap="innerHTML transition:true"
                                hx-target="#appcontent">{{ lst
                             }}</a>
