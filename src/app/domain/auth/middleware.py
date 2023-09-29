@@ -19,7 +19,7 @@ store = MemoryStore()
 class JWTAuthenticationMiddleware(AbstractAuthenticationMiddleware):
     async def authenticate_request(self, connection: ASGIConnection) -> AuthenticationResult:
         """Parse the request api key stored in the header and retrieve the user correlating to the token from the DB."""
-        if not (auth_header := connection.headers.get(settings.API_KEY_HEADER)):
+        if not (auth_header := connection.headers.get("Authorization")):
             if not (cookie_header := connection.cookies.get(settings.API_KEY_COOKIE)):
                 raise NotAuthorizedException()
             auth_header = f"Bearer {cookie_header}"

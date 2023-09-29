@@ -34,13 +34,13 @@ async def test_signup(test_client: AsyncTestClient) -> None:
         assert "expires_at" in resp_json
 
         response = await client.get(
-            "/v1/list", headers={settings.API_KEY_HEADER: f"{resp_json['token_type']} {resp_json['access_token']}"}
+            "/v1/list", headers={"Authorization": f"{resp_json['token_type']} {resp_json['access_token']}"}
         )
         assert response.status_code == HTTP_200_OK
-        response = await client.get("/v1/list", headers={settings.API_KEY_HEADER: f"{resp_json['token_type']} ADFJ"})
+        response = await client.get("/v1/list", headers={"Authorization": f"{resp_json['token_type']} ADFJ"})
         assert response.status_code == HTTP_401_UNAUTHORIZED
         response = await client.get(
-            "/v1/list", headers={settings.API_KEY_HEADER: f"BeaRER {resp_json['access_token']}"}
+            "/v1/list", headers={"Authorization": f"BeaRER {resp_json['access_token']}"}
         )
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
@@ -85,7 +85,7 @@ async def test_signup(test_client: AsyncTestClient) -> None:
         payload = {"login": "testc01", "password": "newPasssswordOK01"}
         response = await client.post("/v1/auth/token", json=payload)
         assert response.status_code == HTTP_200_OK
-        user_token_header = {settings.API_KEY_HEADER: f"Bearer {response.json()['access_token']}"}
+        user_token_header = {"Authorization": f"Bearer {response.json()['access_token']}"}
 
         payload = {"login": "newuser001", "password": "abcdefgHij1"}
         response = await client.post("/v1/admin/signup", json=payload, headers=user_token_header)

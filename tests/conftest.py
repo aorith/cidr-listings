@@ -21,7 +21,7 @@ TEST_USER_PAYLOAD = {
 async def get_api_token_header(client):
     response = await client.post("/v1/auth/token", json=TEST_USER_PAYLOAD)
     assert response.status_code == HTTP_200_OK
-    return {settings.API_KEY_HEADER: f"Bearer {response.json()['access_token']}"}
+    return {"Authorization": f"Bearer {response.json()['access_token']}"}
 
 
 @pytest.fixture(scope="session")

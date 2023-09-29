@@ -1,6 +1,6 @@
 from functools import lru_cache
 
-from pydantic import Field
+from pydantic import Field, ValidationError
 from pydantic_settings import BaseSettings
 
 
@@ -41,9 +41,8 @@ class Settings(BaseSettings):
     DEBUG: bool = False
 
     # JWT
-    JWT_SECRET: str = "_CHANGE_THIS_"
+    JWT_SECRET: str
     ALGORITHM: str = "HS256"
-    API_KEY_HEADER: str = "X-API-KEY"
     API_KEY_COOKIE: str = "apisessionkey"
 
     DEFAULT_TOKEN_TTL_SECONDS: int = 60 * 60 * 24
@@ -62,4 +61,8 @@ class Settings(BaseSettings):
 @lru_cache
 def get_settings():
     """Return cached settings so it's the same instance everywhere."""
-    return Settings()
+    try:
+        return Settings()  # type: ignore
+    except ValidationError as err:
+        print("Could not load settings.", err)  # noqa: T201
+        raise err from err

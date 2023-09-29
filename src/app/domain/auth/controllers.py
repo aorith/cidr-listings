@@ -82,16 +82,12 @@ class AuthController(Controller):
     @post(
         "/token",
         status_code=HTTP_200_OK,
-        response_headers=[
-            ResponseHeader(name=settings.API_KEY_HEADER, value="Bearer <TOKEN>", description="Token header")
-        ],
+        response_headers=[ResponseHeader(name="Authorization", value="Bearer <TOKEN>", description="Token header")],
     )
     async def generate_token(self, conn: PoolConnectionProxy, data: UserLoginOrCreate) -> Response[TokenResponse]:
         """Generate an API access token."""
         token = await generate_token(conn=conn, data=data)
         return Response(
             token,
-            headers=[
-                ResponseHeader(name=settings.API_KEY_HEADER, value=f"Bearer {token.access_token}", description="Token")
-            ],
+            headers=[ResponseHeader(name="Authorization", value=f"Bearer {token.access_token}", description="Token")],
         )

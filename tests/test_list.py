@@ -102,21 +102,21 @@ async def test_list_user_scope(test_client: AsyncTestClient) -> None:
 
         # Create a list with user1
         response = await client.post(
-            "/v1/list", json={"id": "USER1", "list_type": ListTypeEnum.DENY}, headers={settings.API_KEY_HEADER: token1}
+            "/v1/list", json={"id": "USER1", "list_type": ListTypeEnum.DENY}, headers={"Authorization": token1}
         )
         assert response.status_code == HTTP_201_CREATED
         # Create a list with user2
         response = await client.post(
-            "/v1/list", json={"id": "USER2", "list_type": ListTypeEnum.DENY}, headers={settings.API_KEY_HEADER: token2}
+            "/v1/list", json={"id": "USER2", "list_type": ListTypeEnum.DENY}, headers={"Authorization": token2}
         )
         assert response.status_code == HTTP_201_CREATED
 
         # Ensure each user only has their list
-        response = await client.get("/v1/list", headers={settings.API_KEY_HEADER: token1})
+        response = await client.get("/v1/list", headers={"Authorization": token1})
         assert response.status_code == HTTP_200_OK
         assert len(response.json()) == 1
         assert response.json()[0]["id"] == "USER1"
-        response = await client.get("/v1/list", headers={settings.API_KEY_HEADER: token2})
+        response = await client.get("/v1/list", headers={"Authorization": token2})
         assert response.status_code == HTTP_200_OK
         assert len(response.json()) == 1
         assert response.json()[0]["id"] == "USER2"
@@ -148,7 +148,7 @@ async def test_cidr_list(test_client: AsyncTestClient) -> None:
 
         response = await client.post("/v1/auth/token", json=payload)
         assert response.status_code == HTTP_200_OK
-        token = {settings.API_KEY_HEADER: f"Bearer {response.json()['access_token']}"}
+        token = {"Authorization": f"Bearer {response.json()['access_token']}"}
 
         list_payload = {"id": "TEST_LIST_CIDR", "list_type": "DENY"}
         response = await client.post("/v1/list", json=list_payload, headers=token)

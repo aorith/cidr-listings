@@ -48,11 +48,7 @@ app = Litestar(
     debug=settings.DEBUG,
     openapi_config=openapi_config,
     route_handlers=routes,
-    response_headers=[
-        ResponseHeader(
-            name="Vary", value=f"{settings.API_KEY_HEADER}, Accept-Encoding", description="Default vary header"
-        )
-    ],
+    response_headers=[ResponseHeader(name="Vary", value="Accept-Encoding", description="Default vary header")],
     exception_handlers={HTTPException: default_httpexception_handler},
     plugins=[CLIPlugin()],
     middleware=[auth_mw],

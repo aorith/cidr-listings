@@ -7,6 +7,7 @@ DB_HOST ?= 127.0.0.1
 DB_PORT ?= 5432
 DB_NAME ?= cidr
 
+JWT_SECRET ?= super_secure_test_secret_!
 TEST_USER ?= test
 TEST_USER_PASSWORD ?= Ilovet3st!
 
@@ -42,6 +43,7 @@ test: .venv
 	@$(LOAD_VENV) && \
 		make reset_app && \
 		echo "Running tests ..." && \
+		export JWT_SECRET=$(JWT_SECRET) && \
 		pytest --show-capture=all --verbosity=10
 
 # Teardown test DB
@@ -75,6 +77,7 @@ reset_app:
 	@$(LOAD_VENV) && \
 		echo "Running migrations and creating test superuser ..." && \
 		cd src && \
+		export JWT_SECRET=$(JWT_SECRET) && \
 		litestar run-db-migrations && \
 		litestar create-user --login $(TEST_USER) --password $(TEST_USER_PASSWORD) --superuser && \
 		cd ..
