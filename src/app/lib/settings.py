@@ -65,4 +65,4 @@ def get_settings():
         return Settings()  # type: ignore
     except ValidationError as err:
         print("Could not load settings.", err)  # noqa: T201
-        raise err from err
+        raise
