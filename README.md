@@ -10,7 +10,7 @@ This app was created to learn and experiment with:
 - Simple and custom [DB migrations script](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/lib/db/migrations.py)
 - [Asyncpg](https://github.com/MagicStack/asyncpg)
 - [Msgspec](https://github.com/jcrist/msgspec) instead of [pydantic](https://github.com/pydantic/pydantic)
-- [JWT](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/domain/auth/jwt.py) [(Json Web Token)](.org/wiki/JSON_Web_Token)
+- [JWT](https://github.com/aorith/cidr-listings/blob/2776c832005e0fb128f543393926aec9201d16d5/src/app/domain/auth/jwt.py) [(Json Web Token)](https://en.wikipedia.org/wiki/JSON_Web_Token)
 - [HTMX](https://htmx.org/)
 - Manipulating IP networks (here's some magic to [exclude a network from another](https://github.com/aorith/cidr-listings/blob/469c87fa3488bf41ca4c24eefb94d7050b25f44f/src/app/lib/iputils.py#L12) faster than the builtin python `address_exclude`)
 
@@ -22,9 +22,9 @@ Lists have two types:
 - denylist
 - safelist
 
-Safelists exist exclusively to filter the denylists, when you add an address to an **enabled** safelist, that address is removed from all the existing denylists and when you enable a disabled safelist all the denylists are filtered with the addresses of that safelist.
+Safelists exist exclusively to filter the denylists, when you add an address to an **enabled** safelist, that address is removed from all the existing denylists. The same thing happens when you enable a disabled safelist, all the denylists are filtered with the addresses of that safelist.
 
-For example, if you have the following networks/addresses in a denylist (or spread in many denylist it doesn't matter):
+For example, if you have the following networks/addresses in a denylist (or spread in many denylists):
 
 ```
 66.66.1.0/24
