@@ -88,7 +88,7 @@ After you exclude address `a` with address `b` (checking if `b` is contained in 
 
 - Nothing, if `b` is a supernet of `a` (you cannot use `address_exclude` directly here and must check explicitly if `b` is a supernet of `a`)
 - Nothing if `b` is equal to `a`
-- One or many subnets if `b` is a subnet of `a`)
+- One or many subnets (if `b` is a subnet of `a`)
 - The original address `a` if `b` just doesn't exclude anything from `a`
 
 When you end up with one or multiple extra subnets after an exclusion, you need to iterate over them again to ensure that they are fully excluded with your _safe addresses_. That can become tedious and slow, you also cannot be sure on how many times you need to iterate until everything is excluded correctly.
