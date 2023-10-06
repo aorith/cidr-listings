@@ -15,11 +15,11 @@ RUN pip install --no-cache-dir --upgrade pip \
         && rm -f /tmp/requirements.txt
 
 # Code
-WORKDIR /APP
-COPY ./src/app /APP/app
+WORKDIR /CODE
+COPY ./src/app /CODE/app
 
 # Bytecode optimizations
 RUN python -c "import compileall; compileall.compile_path(maxlevels=10)" \
-        && python -m compileall /app
+        && python -m compileall /CODE/app
 
 ENTRYPOINT ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
