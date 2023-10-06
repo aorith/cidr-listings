@@ -55,7 +55,7 @@ The denylists are filtered and end up with the following:
 66.66.1.64/26
 ```
 
-This also works if you try to add the original addresses to the denylist when a safelists is present, basically safelists act as a filter for denylists.
+This also works if you try to add the original addresses to the denylist when they are present in a safelist, basically safelists act as a filter for denylists.
 
 #### About address exclusion
 
