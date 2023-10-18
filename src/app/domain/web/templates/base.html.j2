@@ -62,20 +62,15 @@
             </div>
         </header>
         <main>
+            <div id="htmx-error-alert" hidden></div>
             <div id="appcontent"></div>
         </main>
     </body>
     <script>
-  document.body.addEventListener("cleanErrors", function (evt) {
-    const e = document.querySelector(".error");
-    if (e) {
-      e.remove();
-    }
-  })
-
   document.body.addEventListener("scrollToBottom", function (evt) {
     const app = document.querySelector("#appcontent");
     window.scrollTo({top: document.body.scrollHeight, behavior: "smooth"});
   })
     </script>
+    <script src="/static/js/error.js"></script>
 </html>
