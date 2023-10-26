@@ -422,7 +422,7 @@ class WebPartCidrController(Controller):
         data: Annotated[dict, Body(media_type=RequestEncodingType.URL_ENCODED)],
     ) -> Template:
         """Get network info for CIDR."""
-        return await get_network_info(conn=conn, address=data.get("address", ""), user_id=request.user.id)
+        return await get_network_info(conn=conn, address=data.get("address", "").strip(), user_id=request.user.id)
 
     @delete("/{list_id:str}/{ip:str}/{prefix:str}", include_in_schema=False, status_code=HTTP_200_OK)
     async def delete_cidr(
