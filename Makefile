@@ -11,6 +11,9 @@ JWT_SECRET ?= super_secure_test_secret_!
 TEST_USER ?= test
 TEST_USER_PASSWORD ?= Ilovet3st!
 
+DEFAULT_ADMIN_USER ?= admin
+DEFAULT_ADMIN_USER_PASSWORD ?= Ch4ng3Th1s!
+
 # Don't load the variables early with ':=' here
 LOAD_VENV = [[ -n "$$VIRTUAL_ENV" ]] || source .venv/bin/activate
 

@@ -40,6 +40,10 @@ class Settings(BaseSettings):
     VERSION: str = "1.0"
     DEBUG: bool = False
 
+    # DEFAULT_USER
+    DEFAULT_ADMIN_USER: str | None = None
+    DEFAULT_ADMIN_USER_PASSWORD: str | None = None
+
     # JWT
     JWT_SECRET: str
     ALGORITHM: str = "HS256"
