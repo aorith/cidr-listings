@@ -12,7 +12,7 @@ from litestar.enums import RequestEncodingType
 from litestar.exceptions import HTTPException, NotFoundException, ValidationException
 from litestar.params import Body
 from litestar.response import Template
-from litestar.status_codes import HTTP_200_OK, HTTP_204_NO_CONTENT
+from litestar.status_codes import HTTP_200_OK, HTTP_204_NO_CONTENT, HTTP_400_BAD_REQUEST
 from msgspec import ValidationError
 
 from app.domain.auth.schemas import Token, User, UserLoginOrCreate
@@ -209,7 +209,10 @@ class WebPartListController(Controller):
                 new_list.description,
             )
         if not record:
-            raise HTTPException(status_code=409, detail=f"List {new_list.id} already exists.")
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail=f"List ID '{new_list.id}' already exists. It must be unique between accounts.",
+            )
 
         return Template(template_name="partials/list-item.html.j2", context={"item": record, "new_item": True})
 

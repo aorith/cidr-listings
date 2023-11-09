@@ -1,11 +1,5 @@
 from conftest import get_api_token_header
-from litestar.status_codes import (
-    HTTP_200_OK,
-    HTTP_201_CREATED,
-    HTTP_400_BAD_REQUEST,
-    HTTP_401_UNAUTHORIZED,
-    HTTP_409_CONFLICT,
-)
+from litestar.status_codes import HTTP_200_OK, HTTP_201_CREATED, HTTP_400_BAD_REQUEST, HTTP_401_UNAUTHORIZED
 from litestar.testing import AsyncTestClient
 
 from app.lib.settings import get_settings
@@ -21,7 +15,7 @@ async def test_signup(test_client: AsyncTestClient) -> None:
         response = await client.post("/v1/admin/signup", json=payload, headers=api_token_header)
         assert response.status_code == HTTP_201_CREATED
         response = await client.post("/v1/admin/signup", json=payload, headers=api_token_header)
-        assert response.status_code == HTTP_409_CONFLICT
+        assert response.status_code == HTTP_400_BAD_REQUEST
         response = await client.post("/v1/admin/signup", json=payload, headers={})
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
@@ -39,9 +33,7 @@ async def test_signup(test_client: AsyncTestClient) -> None:
         assert response.status_code == HTTP_200_OK
         response = await client.get("/v1/list", headers={"Authorization": f"{resp_json['token_type']} ADFJ"})
         assert response.status_code == HTTP_401_UNAUTHORIZED
-        response = await client.get(
-            "/v1/list", headers={"Authorization": f"BeaRER {resp_json['access_token']}"}
-        )
+        response = await client.get("/v1/list", headers={"Authorization": f"BeaRER {resp_json['access_token']}"})
         assert response.status_code == HTTP_401_UNAUTHORIZED
 
         # Verify validations

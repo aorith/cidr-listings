@@ -2,23 +2,11 @@ from asyncpg.pool import PoolConnectionProxy
 from litestar import Request, Response, post, put
 from litestar.controller import Controller
 from litestar.datastructures import ResponseHeader, State
-from litestar.exceptions import (
-    HTTPException,
-    InternalServerException,
-    NotAuthorizedException,
-    ValidationException,
-)
-from litestar.status_codes import HTTP_200_OK
+from litestar.exceptions import HTTPException, InternalServerException, NotAuthorizedException, ValidationException
+from litestar.status_codes import HTTP_200_OK, HTTP_400_BAD_REQUEST
 
-from app.domain.auth.schemas import (
-    Token,
-    TokenResponse,
-    User,
-    UserChangePassword,
-    UserLoginOrCreate,
-    UserReadDTO,
-    UserRoleEnum,
-)
+from app.domain.auth.schemas import (Token, TokenResponse, User, UserChangePassword, UserLoginOrCreate, UserReadDTO,
+                                     UserRoleEnum)
 from app.domain.auth.services import generate_token
 from app.lib.authcrypt import generate_salt_and_hashed_password
 from app.lib.settings import get_settings
@@ -49,7 +37,7 @@ class AuthAdminController(Controller):
             raise NotAuthorizedException()
 
         if await conn.fetchval("select login from user_login where login = $1", data.login):
-            raise HTTPException(status_code=409, detail="Login name already taken.")
+            raise HTTPException(status_code=HTTP_400_BAD_REQUEST, detail="Login name already taken.")
         salt, hashed_password = await generate_salt_and_hashed_password(plain_password=data.password)
         user = User(login=data.login, salt=salt, hashed_password=hashed_password)
         await conn.execute(INSERT_USER, user.id, user.login, user.salt, user.hashed_password)

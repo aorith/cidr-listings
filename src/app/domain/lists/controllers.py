@@ -9,19 +9,8 @@ from litestar.status_codes import HTTP_400_BAD_REQUEST
 
 from app.domain.auth.schemas import Token, User
 from app.domain.cidr.schemas import CidrNL
-from app.domain.lists.schemas import (
-    ActionEnum,
-    CidrAdd,
-    CidrAddRaw,
-    CidrDelete,
-    CidrDeleteRaw,
-    CidrJob,
-    CidrList,
-    ListCreateDTO,
-    ListFull,
-    ListTypeEnum,
-    ListUpdateDTO,
-)
+from app.domain.lists.schemas import (ActionEnum, CidrAdd, CidrAddRaw, CidrDelete, CidrDeleteRaw, CidrJob, CidrList,
+                                      ListCreateDTO, ListFull, ListTypeEnum, ListUpdateDTO)
 from app.domain.lists.services import insert_cidr_job, parse_raw_cidrs_input_as_str
 from app.lib.validations import run_validation
 
@@ -78,7 +67,10 @@ class ListController(Controller):
                 data.description,
             )
         if not record:
-            raise HTTPException(status_code=409, detail=f"List {data.id} already exists.")
+            raise HTTPException(
+                status_code=HTTP_400_BAD_REQUEST,
+                detail=f"List ID '{data.id}' already exists. It must be unique between accounts.",
+            )
         return Response(ListFull(**record))
 
     @get("/{id:str}")
