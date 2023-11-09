@@ -30,7 +30,7 @@ INSERT INTO list
     (id, user_id, list_type, enabled, tags, description)
 VALUES
     ($1, $2, $3, $4, $5, $6)
-ON CONFLICT (id, user_id)
+ON CONFLICT (id)
     DO NOTHING
 RETURNING *;
 
