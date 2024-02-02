@@ -28,8 +28,6 @@ click==8.1.7
     #   litestar
     #   rich-click
     #   uvicorn
-ecdsa==0.18.0
-    # via python-jose
 editorconfig==0.12.3
     # via jsbeautifier
 faker==22.6.0
@@ -70,10 +68,6 @@ multidict==6.0.5
     # via litestar
 polyfactory==2.14.1
     # via litestar
-pyasn1==0.5.1
-    # via
-    #   python-jose
-    #   rsa
 pycparser==2.21
     # via cffi
 pydantic==2.6.0
@@ -86,14 +80,14 @@ pydantic-settings==2.1.0
     # via cidr-listing (pyproject.toml)
 pygments==2.17.2
     # via rich
+pyjwt==2.8.0
+    # via cidr-listing (pyproject.toml)
 python-dateutil==2.8.2
     # via faker
 python-dotenv==1.0.1
     # via
     #   pydantic-settings
     #   uvicorn
-python-jose==3.3.0
-    # via cidr-listing (pyproject.toml)
 pyyaml==6.0.1
     # via
     #   litestar
@@ -104,11 +98,8 @@ rich==13.7.0
     #   rich-click
 rich-click==1.7.3
     # via litestar
-rsa==4.9
-    # via python-jose
 six==1.16.0
     # via
-    #   ecdsa
     #   jsbeautifier
     #   python-dateutil
 sniffio==1.3.0

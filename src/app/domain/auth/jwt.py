@@ -1,7 +1,8 @@
 from datetime import datetime, timedelta, timezone
 from uuid import UUID
 
-from jose import JWTError, jwt
+import jwt
+from jwt import PyJWTError
 from litestar.exceptions import NotAuthorizedException
 from msgspec import to_builtins
 
@@ -18,9 +19,9 @@ def decode_jwt_token(encoded_token: str) -> Token:
     an exception is raised.
     """
     try:
-        payload = jwt.decode(token=encoded_token, key=settings.JWT_SECRET, algorithms=[settings.ALGORITHM])
+        payload = jwt.decode(jwt=encoded_token, key=settings.JWT_SECRET, algorithms=[settings.ALGORITHM])
         return Token(**payload)
-    except JWTError as e:
+    except PyJWTError as e:
         raise NotAuthorizedException("Invalid token") from e
 
 

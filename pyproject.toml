@@ -13,7 +13,7 @@ dependencies = [
     "msgspec",
     "pydantic",
     "pydantic-settings",
-    "python-jose",
+    "PyJWT",
 ]
 
 [project.optional-dependencies]
