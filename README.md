@@ -101,7 +101,7 @@ That is solved with the following functions that exclude addresses faster and co
 
 ### Installation & development
 
-The scripts [run-postgres-prod.sh](run-postgres-prod.sh) and [run-app-prod.sh](run-app-prod.sh) provide an example on how to run the app, the database must be up and running before starting the app.
+A [compose.yaml](compose.yaml) file is provided as an example on how to run the app.  
 
 To develop locally, run `make install` to create a _venv_ with all the dependencies, `make test` always starts an empty database and runs all the tests.  
 The app can be started by running the `litestar` cli tool: `cd src; litestar run --reload`.

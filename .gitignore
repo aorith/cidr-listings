@@ -1,7 +1,6 @@
 TODO.md
 poetry.lock
 internal-tests
-env
 data
 
 # Byte-compiled / optimized / DLL files
@@ -107,6 +106,7 @@ celerybeat.pid
 *.sage.py
 
 # Environments
+env
 .env
 .venv
 env/

@@ -22,4 +22,5 @@ COPY ./src/app /CODE/app
 RUN python -c "import compileall; compileall.compile_path(maxlevels=10)" \
         && python -m compileall /CODE/app
 
-ENTRYPOINT ["uvicorn", "app.main:app", "--host", "0.0.0.0", "--port", "8000"]
+ENTRYPOINT ["uvicorn"]
+CMD ["app.main:app", "--host", "0.0.0.0", "--port", "8000"]
