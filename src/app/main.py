@@ -54,9 +54,9 @@ app = Litestar(
     plugins=[CLIPlugin()],
     middleware=[auth_mw],
     dependencies={"conn": Provide(dbmngr.get_connection)},
-    on_startup=[dbmngr.setup, run_migrations, cidr_worker.run, scheduler.run, create_default_admin_user],
+    on_startup=[dbmngr.setup, run_migrations, scheduler.run, create_default_admin_user],
     on_app_init=[],
-    on_shutdown=[cidr_worker.stop, scheduler.stop, dbmngr.stop],
+    on_shutdown=[scheduler.stop, dbmngr.stop],
     static_files_config=[StaticFilesConfig(directories=[statics_dir], path="/", html_mode=False)],
     template_config=TemplateConfig(directory=templates_dir, engine=JinjaTemplateEngine),
 )

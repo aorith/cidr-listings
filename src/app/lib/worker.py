@@ -322,7 +322,16 @@ class CidrWorker:
         self.keep_running = False
 
     async def run(self) -> None:
-        """Start the bg thread with consume_loop."""
+        """Run consume_loop in foreground."""
+        await self._consume_loop()
+
+    async def run_bg(self) -> None:
+        """Start the bg thread with consume_loop.
+
+        To run the worker along with the litestar process:
+            on_startup=[cidr_worker.run],
+            on_shutdown=[cidr_worker.stop],
+        """
         t = threading.Thread(
             target=asyncio.run, args=(self._consume_loop(),), name="job_queue_worker_thread", daemon=True
         )
