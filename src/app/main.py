@@ -6,7 +6,7 @@ from litestar.datastructures import ResponseHeader
 from litestar.di import Provide
 from litestar.exceptions import HTTPException
 from litestar.middleware.base import DefineMiddleware
-from litestar.static_files.config import StaticFilesConfig
+from litestar.static_files import create_static_files_router
 from litestar.template.config import TemplateConfig
 
 from app.domain import routes
@@ -23,7 +23,6 @@ from app.lib.worker import CidrWorker
 
 settings = get_settings()
 base_dir = Path(__file__).resolve().parent
-statics_dir = base_dir / Path("domain/web/statics")
 templates_dir = base_dir / Path("domain/web/templates")
 
 __version__ = settings.VERSION
@@ -48,7 +47,7 @@ scheduler = Scheduler()
 app = Litestar(
     debug=settings.DEBUG,
     openapi_config=openapi_config,
-    route_handlers=routes,
+    route_handlers=[*routes, create_static_files_router(path="/", directories=["app/domain/web/statics"])],
     response_headers=[ResponseHeader(name="Vary", value="Accept-Encoding", description="Default vary header")],
     exception_handlers={HTTPException: default_httpexception_handler},
     plugins=[CLIPlugin()],
@@ -57,6 +56,5 @@ app = Litestar(
     on_startup=[dbmngr.setup, run_migrations, scheduler.run, create_default_admin_user],
     on_app_init=[],
     on_shutdown=[scheduler.stop, dbmngr.stop],
-    static_files_config=[StaticFilesConfig(directories=[statics_dir], path="/", html_mode=False)],
     template_config=TemplateConfig(directory=templates_dir, engine=JinjaTemplateEngine),
 )

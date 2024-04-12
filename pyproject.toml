@@ -4,7 +4,7 @@ version = "1.0.0"
 description = "Asynchrounous API for storing and retrieving lists of IP addresses"
 authors = [ { name = "Manuel Sanchez Pinar", email =  "aomanu@gmail.com" } ]
 license = "MIT"
-requires-python = ">=3.10"
+requires-python = ">=3.11"
 readme = "README.md"
 dependencies = [
     "argon2-cffi",
