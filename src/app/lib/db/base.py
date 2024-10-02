@@ -8,12 +8,8 @@ from app.lib.settings import get_settings
 
 settings = get_settings()
 
-dsn = "postgres://{}:{}@{}:{}/{}".format(
-    settings.DB_USERNAME,
-    settings.DB_PASSWORD,
-    settings.DB_HOST,
-    settings.DB_PORT,
-    settings.DB_NAME,
+dsn = (
+    f"postgres://{settings.DB_USERNAME}:{settings.DB_PASSWORD}@{settings.DB_HOST}:{settings.DB_PORT}/{settings.DB_NAME}"
 )
 
 
