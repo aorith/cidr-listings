@@ -1,6 +1,6 @@
 SHELL := bash
 
-DB_IMAGE ?= postgres:15
+DB_IMAGE ?= postgres:17
 DB_USERNAME ?= test
 DB_PASSWORD ?= test1234
 DB_HOST ?= 127.0.0.1
