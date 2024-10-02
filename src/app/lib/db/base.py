@@ -44,7 +44,7 @@ class DBManager:
 
     async def get_connection(self) -> AsyncGenerator[asyncpg.pool.PoolConnectionProxy, None]:
         """Get a connection from the pool."""
-        conn = await self.pool.acquire(timeout=settings.DB_POOL_ADQUIRE_CONN_TIMEOUT)
+        conn = await self.pool.acquire(timeout=settings.DB_POOL_ACQUIRE_CONN_TIMEOUT)
         try:
             yield conn
         finally:

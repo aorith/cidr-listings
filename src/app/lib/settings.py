@@ -7,7 +7,7 @@ from pydantic_settings import BaseSettings
 class Settings(BaseSettings):
     """Pydantic class to manage environment variables.
 
-    Default values are overriden by the environment
+    Default values are overridden by the environment
     variables with the same name but in uppercase.
     """
 
@@ -23,7 +23,7 @@ class Settings(BaseSettings):
     """Maximum number of connections that a pool can allocate."""
     DB_POOL_MAX_IDLE_TIMEOUT: int = Field(default=300, ge=30)
     """Maximum time a connection can be idle."""
-    DB_POOL_ADQUIRE_CONN_TIMEOUT: int = 5
+    DB_POOL_ACQUIRE_CONN_TIMEOUT: int = 5
     """Maximum time allowed to get a connection from the pool."""
     DB_POOL_CLOSE_TIMEOUT: int = 10
     """Timeout to close the pool."""
